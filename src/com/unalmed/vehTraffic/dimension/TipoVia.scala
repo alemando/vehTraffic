@@ -1,4 +1,4 @@
-package com.unalmed.vehTraffic.base
+package com.unalmed.vehTraffic.dimension
 
 case class TipoVia(val nombre:String) {
   

@@ -1,6 +1,6 @@
-package com.unalmed.vehTraffic.base
+package com.unalmed.vehTraffic.dimension
 
-class Sentido(private val _nombre:String){
+case class Sentido private (_nombre:String){
   
 }
 object Sentido{
