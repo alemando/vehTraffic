@@ -1,5 +1,5 @@
 package com.unalmed.vehTraffic.base
 
-class prueba extends App{
-  
+object prueba extends App{
+  print("hola")
 }
