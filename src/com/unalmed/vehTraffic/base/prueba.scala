@@ -1,5 +1,5 @@
 package com.unalmed.vehTraffic.base
 
-class prueba {
+class prueba extends App{
   
 }
