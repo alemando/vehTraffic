@@ -1,4 +1,4 @@
-package dePrueba
+package com.unalmed.vehTraffic.base
 
 class Movil(var posicion:Punto, var velocidad:Velocidad) extends MovimientoUniforme {
   def aumento={

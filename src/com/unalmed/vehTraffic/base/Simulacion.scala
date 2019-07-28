@@ -1,4 +1,4 @@
-package dePrueba
+package com.unalmed.vehTraffic.base
 
 abstract class Simulacion extends Runnable{
   //es abstract porque no implementa Run por ahora :v

@@ -1,4 +1,4 @@
-package dePrueba
+package com.unalmed.vehTraffic.base
 
 class Sentido(private val _nombre:String){
   

@@ -1,4 +1,4 @@
-package dePrueba
+package com.unalmed.vehTraffic.base
 
 class Grafico {
   //Involucra ChartFrame

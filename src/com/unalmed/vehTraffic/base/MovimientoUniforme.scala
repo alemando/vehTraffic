@@ -1,4 +1,4 @@
-package dePrueba
+package com.unalmed.vehTraffic.base
 
 trait MovimientoUniforme {
   var velocidad:Velocidad

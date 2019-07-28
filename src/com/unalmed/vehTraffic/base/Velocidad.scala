@@ -1,4 +1,4 @@
-package dePrueba
+package com.unalmed.vehTraffic.base
 
 case class Velocidad(var magnitud:Double, var direccion:Angulo){
 
