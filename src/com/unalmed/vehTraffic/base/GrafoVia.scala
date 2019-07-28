@@ -8,10 +8,15 @@ import com.unalmed.vehTraffic.mallaVial.Interseccion
 
 object GrafoVia {
   
-  val g = Graph[Interseccion, WLDiEdge]()
+  val grafo = Graph[Interseccion, WLDiEdge]()
   
-  def construir(vias: ArrayBuffer[Via]) = {
-    vias.foreach(v =>g.add(WLDiEdge(v.origen,v.fin)(v.longitud, v)))
+  def construir(vias: Array[Via]) = {
+    vias.foreach(v =>grafo.add(WLDiEdge(v.origen,v.fin)(v.longitud, v)))
+  }
+  
+  def camino(origen: Interseccion, destino: Interseccion) = {
+    val camino = grafo.get(origen).shortestPathTo(grafo.get(destino)).get
+    camino
   }
   
 }

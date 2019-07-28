@@ -1,13 +1,13 @@
 package com.unalmed.vehTraffic.dimension
 
-case class Sentido private (_nombre:String){
+case class Sentido private (nombre:String){
   
 }
 object Sentido{
   def unaVia={
-    new Sentido("una via")
+    new Sentido("unaVia")
   }
   def dobleVia={
-    new Sentido("doble via")
+    new Sentido("dobleVia")
   }
 }

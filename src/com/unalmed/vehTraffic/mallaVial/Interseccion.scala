@@ -7,3 +7,7 @@ class Interseccion(xx : Double, yy : Double, private val _name : Option[String])
   //TODO name get an setters
   
 }
+
+object Interseccion{
+  
+}

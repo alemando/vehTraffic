@@ -1,15 +1,19 @@
 package com.unalmed.vehTraffic.vehiculo
 
-import com.unalmed.vehTraffic.dimension.MovimientoUniforme
+import com.unalmed.vehTraffic.dimension.{MovimientoUniforme, Velocidad}
 import com.unalmed.vehTraffic.mallaVial.Punto
-import com.unalmed.vehTraffic.dimension.Velocidad
+import com.unalmed.vehTraffic.simulacion.Simulacion
+import com.unalmed.vehTraffic.base.Recorrido
 
-case class Vehiculo(placa : String)(pos : Punto, vel : Velocidad) extends Movil(pos,vel) with MovimientoUniforme {
+case class Vehiculo(placa : String)(pos : Punto, vel : Velocidad, recorrido: Recorrido) extends Movil(pos,vel) with MovimientoUniforme {
   
 }
 object Vehiculo{
+  
   def apply(){
+    val r= scala.util.Random.nextFloat()
     //new Vehiculo
   }
+  
   
 }
