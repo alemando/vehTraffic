@@ -1,9 +1,13 @@
 package com.unalmed.vehTraffic.dimension
 
-trait MovimientoUniforme {
+import com.unalmed.vehTraffic.mallaVial.Punto
+
+trait MovimientoUniforme{
   val velocidad : Velocidad
+  val posicion : Punto
+  
   def cambioPosicion(dt : Int) = {
-    //TODO metodo cambio posicion
+    
   }
   
 }

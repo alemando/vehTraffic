@@ -5,7 +5,8 @@ import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.simulacion.Simulacion
 import com.unalmed.vehTraffic.base.Recorrido
 
-case class Vehiculo(placa : String)(pos : Punto, vel : Velocidad, recorrido: Recorrido) extends Movil(pos,vel) with MovimientoUniforme {
+case class Vehiculo(placa : String)(pos : Punto, vel : Velocidad, val recorrido: Recorrido) extends Movil(pos,vel) with MovimientoUniforme {
+
   
 }
 object Vehiculo{

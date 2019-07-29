@@ -32,8 +32,9 @@ import com.unalmed.vehTraffic.vehiculo.Carro
 import com.unalmed.vehTraffic.vehiculo.Bus
 import com.unalmed.vehTraffic.vehiculo.Camion
 import com.unalmed.vehTraffic.mallaVial.Via
+import com.unalmed.vehTraffic.mallaVial.Interseccion
 
-class Grafico {
+object Grafico {
   
   val cuadrado = new Rectangle(-4,-4,6,6)
   
@@ -72,7 +73,7 @@ class Grafico {
 	ventana.setSize(1300, 700);
 	ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   
-	def añadirDataset(vias: ArrayBuffer[Via], vehiculos: ArrayBuffer[Vehiculo]) = {
+	def iniciarGrafico(vias: ArrayBuffer[Via], vehiculos: ArrayBuffer[Vehiculo], intersecciones: ArrayBuffer[Interseccion]) = {
     var c: Int = 0
     vias.foreach(v => {
       dataset.addSeries(new XYSeries((c)))
@@ -87,8 +88,13 @@ class Grafico {
       renderer.setSeriesShape(vehiculoIndex, figuraGeometrica(ve))
       
       //TODO Color vehiculo
-      renderer.setSeriesPaint(vehiculoIndex, Color.decode("#ff9500"))
+      renderer.setSeriesPaint(vehiculoIndex, Color.decode(ve.recorrido.destino.color))
       
+    })
+    intersecciones.foreach(i => { 
+      val anotacion: XYTextAnnotation = new XYTextAnnotation(i.nombre.getOrElse("Desconocida"), i.x, i.y)
+    	anotacion.setPaint(Color.decode(i.color))
+    	plot.addAnnotation(anotacion)
     })
   }
 	
@@ -107,7 +113,13 @@ class Grafico {
 	}
 	
   def graficarVias(vias: ArrayBuffer[Via]) = {
-    
+    var c: Int = 0
+    vias.foreach(v => {
+      val via =  dataset.getSeries(c)
+      via.add(v.origen.x, v.origen.y)
+	    via.add(v.fin.x, v.fin.y)
+      c +=1
+    })
   }
   
   def graficarVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {

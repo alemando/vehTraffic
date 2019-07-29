@@ -9,7 +9,7 @@ class Recorrido(val origen: Interseccion, val destino: Interseccion, val camino:
 }
 
 object Recorrido{
-  def apply():Recorrido={
+  def apply(): Recorrido={
     val random1=scala.util.Random.nextInt(Simulacion.listaIntersecciones.length)
     var random2=scala.util.Random.nextInt(Simulacion.listaIntersecciones.length)
     while(random1 == random2){random2=scala.util.Random.nextInt(Simulacion.listaIntersecciones.length)}
