@@ -5,7 +5,7 @@ import com.unalmed.vehTraffic.simulacion.Simulacion
 import scalax.collection.edge.WLUnDiEdge
 import scalax.collection.mutable.Graph
 
-class Recorrido(val origen: Interseccion, val destino: Interseccion, val camino: GrafoVia.grafo.Path){
+class Recorrido(val origen: Interseccion, val destino: Interseccion, val camino: Option[GrafoVia.grafo.Path]){
 }
 
 object Recorrido{

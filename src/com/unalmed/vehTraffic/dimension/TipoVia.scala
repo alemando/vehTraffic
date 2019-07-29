@@ -1,5 +1,5 @@
 package com.unalmed.vehTraffic.dimension
 
-case class TipoVia(val nombre:String) {
+case class TipoVia(nombre:String) {
   
 }

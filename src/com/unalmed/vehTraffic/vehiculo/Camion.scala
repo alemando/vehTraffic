@@ -4,7 +4,7 @@ import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.base.Recorrido
 
-class Camion(pla : String, pos : Punto, vel : Velocidad, rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
+class Camion(val pla : String, var pos : Punto, var vel : Velocidad, val rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
   
 }
 object Camion{

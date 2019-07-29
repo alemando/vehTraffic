@@ -7,8 +7,8 @@ import com.unalmed.vehTraffic.mallaVial.Interseccion
 import com.unalmed.vehTraffic.mallaVial.Via
 
 trait MovimientoUniforme{
-  val velocidad : Velocidad
-  val posicion : Punto
+  var _velocidad : Velocidad
+  var _posicion : Punto
   //val ruta : Queue[Via]
   
   def cambioPosicion(dt : Int) = {

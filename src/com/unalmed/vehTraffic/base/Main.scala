@@ -9,11 +9,15 @@ import scala.collection.mutable.Queue
 
 object Main extends App{
   Simulacion
-  /*val recorrido = Recorrido()
-  val velocidad = Velocidad(0,Angulo(0))
-  val vehiculo = Vehiculo("102")(recorrido.origen, velocidad, recorrido)
-  val ruta = Queue(recorrido.camino.edges.toList.map(_.label): _*)
+  val recorrido = Recorrido()
+  println(recorrido.origen)
+  println(recorrido.destino)
+  val vehiculo = Vehiculo()
+  val ruta = recorrido.camino.get
   println(ruta)
-  println(ruta.mkString(","))
-  println("hola")*/
+  val ruta2 = vehiculo.recorrido.camino.get
+  println(ruta2)
+  println(vehiculo)
+  println(vehiculo.placa)
+  println("hola")
 }

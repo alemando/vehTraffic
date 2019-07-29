@@ -4,7 +4,7 @@ import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.base.Recorrido
 
-class Moto(pla : String, pos : Punto, vel : Velocidad, rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
+class Moto(val pla : String, var pos : Punto, var vel : Velocidad, val rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
   
 }
 object Moto{
@@ -18,7 +18,7 @@ object Moto{
     val letras = Placa.letras
     var placa: String = ""
     while(Placa.placas.contains(placa)){
-      placa = (List.fill(3)(r.nextInt(letras.length)):::List.fill(2)(r.nextInt(10)):::List(r.nextInt(letras.length))).mkString("")
+      placa = (List.fill(3)(letras(r.nextInt(letras.length))):::List.fill(2)(r.nextInt(10)):::List(letras(r.nextInt(letras.length)))).mkString("")
     }
     Placa.placas += placa
     placa

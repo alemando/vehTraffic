@@ -1,12 +1,12 @@
 package com.unalmed.vehTraffic.dimension
 
-case class Velocidad(var magnitud : Double, var direccion : Angulo){
+case class Velocidad(magnitud : Double, direccion : Angulo){
   //TODO get setters
 }
 object Velocidad{
-  def apply(mag:Double,dir:Angulo)={
-    new Velocidad(mag,dir)
-  }
+//  def apply(mag:Double,dir:Angulo)={
+//    new Velocidad(mag,dir)
+//  } No se necesita para una case class
   def metroAkilometro(metro:Double):Double={
     metro*3.6
   }

@@ -4,8 +4,8 @@ import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.base.Recorrido
 
-class Bus(pla : String, pos : Punto, vel : Velocidad, rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
-  
+class Bus(val pla : String, var pos : Punto, var vel : Velocidad, val rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
+
 }
 object Bus{
   
@@ -18,7 +18,7 @@ object Bus{
     val letras = Placa.letras
     var placa: String = ""
     while(Placa.placas.contains(placa)){
-      placa = (List.fill(3)(r.nextInt(letras.length)):::List.fill(3)(r.nextInt(10))).mkString("")
+      placa = (List.fill(3)(letras(r.nextInt(letras.length))):::List.fill(3)(r.nextInt(10))).mkString("")
     }
     Placa.placas += placa
     placa
