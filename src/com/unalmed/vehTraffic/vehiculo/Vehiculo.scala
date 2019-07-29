@@ -5,9 +5,10 @@ import com.unalmed.vehTraffic.mallaVial.{Punto, Interseccion}
 import com.unalmed.vehTraffic.simulacion.Simulacion
 import com.unalmed.vehTraffic.base.Recorrido
 import scala.collection.mutable.{Queue, ArrayBuffer}
+import com.unalmed.vehTraffic.mallaVial.Via
 
-case class Vehiculo(placa : String)(pos : Punto, vel : Velocidad, recorrido: Recorrido) extends Movil(pos,vel) with MovimientoUniforme {
-
+case class Vehiculo(placa : String)(pos : Punto, vel : Velocidad, val recorrido: Recorrido) extends Movil(pos,vel) with MovimientoUniforme {
+  //val ruta: Queue[Via] = Queue(recorrido.camino.edges.toList.map(_.label): _*)
 }
 
 object Vehiculo{

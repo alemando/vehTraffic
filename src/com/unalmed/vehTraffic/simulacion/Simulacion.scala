@@ -6,6 +6,10 @@ import com.unalmed.vehTraffic.vehiculo.Vehiculo
 import com.unalmed.vehTraffic.dimension.{Sentido,TipoVia}
 import com.unalmed.vehTraffic.util.JsonRW
 import com.unalmed.vehTraffic.base.Grafico
+import com.unalmed.vehTraffic.base.GrafoVia
+import com.unalmed.vehTraffic.base.Recorrido
+import com.unalmed.vehTraffic.dimension.Velocidad
+import com.unalmed.vehTraffic.dimension.Angulo
 
 object Simulacion extends Runnable{
   
@@ -133,6 +137,8 @@ object Simulacion extends Runnable{
   val listaVehiculos: ArrayBuffer[Vehiculo] = new ArrayBuffer()
   
   val listaIntersecciones: ArrayBuffer[Interseccion] = (listaVias.map(_.origen) ++ listaVias.map(_.fin)).distinct
+  
+  GrafoVia.construir(listaVias)
   
   Grafico.iniciarGrafico(listaVias, listaVehiculos, listaIntersecciones)
   

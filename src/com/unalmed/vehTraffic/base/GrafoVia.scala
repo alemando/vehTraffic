@@ -10,7 +10,7 @@ object GrafoVia {
   
   val grafo = Graph[Interseccion, WLDiEdge]()
   
-  def construir(vias: Array[Via]) = {
+  def construir(vias: ArrayBuffer[Via]) = {
     vias.foreach(v =>grafo.add(WLDiEdge(v.origen,v.fin)(v.longitud, v)))
   }
   

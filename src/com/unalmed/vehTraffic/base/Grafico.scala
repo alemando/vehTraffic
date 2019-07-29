@@ -98,7 +98,7 @@ object Grafico {
     })
   }
 	
-	def figuraGeometrica(n:Vehiculo) = n match {
+	def figuraGeometrica(n: Vehiculo) = n match {
 	  
 	  case n: Carro =>  cuadrado
 	  
