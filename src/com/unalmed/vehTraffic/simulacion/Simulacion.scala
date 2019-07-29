@@ -4,6 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import com.unalmed.vehTraffic.mallaVial.{Via, Interseccion}
 import com.unalmed.vehTraffic.vehiculo.Vehiculo
 import com.unalmed.vehTraffic.dimension.{Sentido,TipoVia}
+import com.unalmed.vehTraffic.util.JsonRW
 
 object Simulacion extends Runnable{
   
@@ -131,27 +132,25 @@ object Simulacion extends Runnable{
   val listaVehiculos: ArrayBuffer[Vehiculo] = new ArrayBuffer()
   
   //TODO cargar datos vias y vehiculos
-  val dt: Int = 0
   
-  val tRefresh: Int = 0*1000
+  //Ubicacion json
+  val basePath = ""
+  val configFile = ""
   
-  val minVehiculos: Int = 0
+  //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
+  var config = JsonRW.readConfig(basePath + configFile)
   
-  val maxVehiculos: Int = 0
-  
-  val minVelocidad: Int = 0
-  
-  val maxVelocidad: Int = 0
-  
-  val proporciónCarros: Double = 0.4
-  
-  val proporciónMotos: Double = 0.3
-  
-  val proporciónBuses: Double = 0.15
-  
-  val proporciónCamiones: Double = 0.1
-  
-  val proporciónMotoTaxis: Double = 0.05
+  val dt: Int = config.parametrosSimulacion.dt  
+  val tRefresh: Int = config.parametrosSimulacion.tRefresh 
+  val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
+  val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
+  val minVelocidad: Int = config.parametrosSimulacion.velocidad.minimo  
+  val maxVelocidad: Int = config.parametrosSimulacion.velocidad.maximo  
+  val proporciónCarros: Double = JsonRW.config.parametrosSimulacion.proporciones.carros 
+  val proporciónMotos: Double = JsonRW.config.parametrosSimulacion.proporciones.motos
+  val proporciónBuses: Double = JsonRW.config.parametrosSimulacion.proporciones.buses
+  val proporciónCamiones: Double = JsonRW.config.parametrosSimulacion.proporciones.camiones  
+  val proporciónMotoTaxis: Double = JsonRW.config.parametrosSimulacion.proporciones.motoTaxis
   
   //TODO Resultados simulacion
   
