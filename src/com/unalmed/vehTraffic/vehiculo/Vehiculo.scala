@@ -4,10 +4,10 @@ import com.unalmed.vehTraffic.dimension.{MovimientoUniforme, Velocidad, Angulo}
 import com.unalmed.vehTraffic.mallaVial.{Punto, Interseccion}
 import com.unalmed.vehTraffic.simulacion.Simulacion
 import com.unalmed.vehTraffic.base.Recorrido
-import scala.collection.mutable.Queue
+import scala.collection.mutable.{Queue, ArrayBuffer}
 
 case class Vehiculo(placa : String)(pos : Punto, vel : Velocidad, recorrido: Recorrido) extends Movil(pos,vel) with MovimientoUniforme {
-  
+
 }
 
 object Vehiculo{
@@ -28,6 +28,12 @@ object Vehiculo{
       return Camion(Camion.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
     else
       return MotoTaxi(MotoTaxi.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
+  }
+  
+  def llenarVehiculos(minimo: Int, maximo: Int): ArrayBuffer[Vehiculo]={
+    val cantidad = minimo + {scala.util.Random.nextInt(maximo-minimo)}
+    val todos = ArrayBuffer.fill(cantidad)(Vehiculo())
+    todos
   }
   
   
