@@ -9,6 +9,7 @@ import scala.collection.mutable.Queue
 
 object Main extends App{
   Simulacion
+  println(Simulacion.vehiculo.ruta)
   /*val recorrido = Recorrido()
   println(recorrido.origen)
   println(recorrido.destino)

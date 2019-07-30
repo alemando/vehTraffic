@@ -7,6 +7,10 @@ case class Angulo(valor:Double) {
 }
 object Angulo{
   def anguloDosPuntos(p1:Punto, p2:Punto) = {
-    new Angulo(Math.atan((p2.y - p1.y)/(p2.x - p1.x)))
+    val y = p2.y - p1.y
+    val x = p2.x - p1.x
+    var mag = Math.atan(Math.abs(y)/Math.abs(x))
+    if(x<=0 && y<=0) mag = Math.PI + mag else if(x<=0 && y>=0) mag = Math.PI -mag else if (x>=0 && y<=0) mag =(2*Math.PI)-mag
+    new Angulo(mag)
   }
 }

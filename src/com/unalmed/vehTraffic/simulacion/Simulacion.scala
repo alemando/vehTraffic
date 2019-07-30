@@ -149,8 +149,8 @@ object Simulacion extends Runnable{
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   var config = JsonRW.readConfig(basePath + configFile)
   
-  val dt: Int = config.parametrosSimulacion.dt  *10
-  val tRefresh: Int = config.parametrosSimulacion.tRefresh*1000
+  val dt: Int = config.parametrosSimulacion.dt  *40
+  val tRefresh: Int = config.parametrosSimulacion.tRefresh*500
   val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
   val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
   val minVelocidad: Int = config.parametrosSimulacion.velocidad.minimo  
@@ -167,6 +167,7 @@ object Simulacion extends Runnable{
   
   val vehiculo = Vehiculo()
   listaVehiculos += vehiculo
+  println(vehiculo.recorrido.camino)
   
   
   
