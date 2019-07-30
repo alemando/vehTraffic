@@ -9,15 +9,11 @@ import scala.collection.mutable.Queue
 
 object Main extends App{
   Simulacion
-  val recorrido = Recorrido()
+  /*val recorrido = Recorrido()
   println(recorrido.origen)
   println(recorrido.destino)
   val vehiculo = Vehiculo()
-  val ruta = recorrido.camino.get
-  println(ruta)
-  val ruta2 = vehiculo.recorrido.camino.get
-  println(ruta2)
-  println(vehiculo)
-  println(vehiculo.placa)
-  println("hola")
+  println(vehiculo.ruta)
+  
+  println(Angulo.anguloDosPuntos(vehiculo.ruta.head.origen, vehiculo.ruta.head.fin).valor)*/
 }

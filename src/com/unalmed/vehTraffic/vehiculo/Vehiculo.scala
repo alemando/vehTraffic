@@ -9,7 +9,8 @@ import com.unalmed.vehTraffic.mallaVial.Via
 
 abstract case class Vehiculo(placa : String)(var _posicion : Punto, var _velocidad: Velocidad, val recorrido: Recorrido)
 extends Movil(_posicion,_velocidad) with MovimientoUniforme {
-  //val ruta: Queue[Via] = Queue(recorrido.camino.map(_.edges.toList.map(_.label): _*)
+  val ruta: Queue[Via] = Queue(recorrido.camino.get.edges.map(_.label.asInstanceOf[Via]).toList: _*)
+  val intersecciones: Queue[Interseccion] = Queue(recorrido.camino.get.nodes.map(_.value.asInstanceOf[Interseccion]).toList: _*)
 }
 
 object Vehiculo{
@@ -18,7 +19,7 @@ object Vehiculo{
     val r= scala.util.Random.nextFloat()
     val velocidad = Simulacion.minVelocidad + scala.util.Random.nextInt({Simulacion.maxVelocidad - Simulacion.minVelocidad})
     val recorrido = Recorrido()
-    val nodo = recorrido.camino.map(_.startNode.value).getOrElse(new Punto(0,0))
+    val nodo = recorrido.origen
     var contador: Double= 0
     if (r<contador && r>={contador= contador+Simulacion.proporciónCarros; contador})
       return Carro(Carro.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)

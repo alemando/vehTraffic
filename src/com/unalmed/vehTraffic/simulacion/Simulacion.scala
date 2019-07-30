@@ -138,11 +138,7 @@ object Simulacion extends Runnable{
   
   val listaIntersecciones: ArrayBuffer[Interseccion] = (listaVias.map(_.origen) ++ listaVias.map(_.fin)).distinct
   
-  GrafoVia.construir(listaVias)
   
-  Grafico.iniciarGrafico(listaVias, listaVehiculos, listaIntersecciones)
-  
-  Grafico.graficarVias(listaVias)
   
   //TODO Generacion autos
   
@@ -153,7 +149,7 @@ object Simulacion extends Runnable{
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   var config = JsonRW.readConfig(basePath + configFile)
   
-  val dt: Int = config.parametrosSimulacion.dt  
+  val dt: Int = config.parametrosSimulacion.dt  *10
   val tRefresh: Int = config.parametrosSimulacion.tRefresh*1000
   val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
   val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
@@ -166,6 +162,19 @@ object Simulacion extends Runnable{
   val proporciónMotoTaxis: Double = JsonRW.config.parametrosSimulacion.proporciones.motoTaxis
   
   //TODO Resultados simulacion
+  
+  GrafoVia.construir(listaVias)
+  
+  val vehiculo = Vehiculo()
+  listaVehiculos += vehiculo
+  
+  
+  
+  Grafico.iniciarGrafico(listaVias, listaVehiculos, listaIntersecciones)
+  
+  Grafico.graficarVias(listaVias)
+  
+  run()
   
   def run() {
     while (true) {

@@ -80,14 +80,12 @@ object Grafico {
       renderer.setSeriesShapesVisible(c, false)
       c +=1
     })
-    //TODO color vehiculo destino final
+    
     vehiculos.foreach(ve => {
       dataset.addSeries(new XYSeries((ve.placa)))
       val vehiculoIndex = dataset.getSeriesIndex(ve.placa)
       
       renderer.setSeriesShape(vehiculoIndex, figuraGeometrica(ve))
-      
-      //TODO Color vehiculo
       renderer.setSeriesPaint(vehiculoIndex, Color.decode(ve.recorrido.destino.color))
       
     })
@@ -123,6 +121,10 @@ object Grafico {
   }
   
   def graficarVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
-    
+    vehiculos.foreach(ve => {
+      val vehiculo =  dataset.getSeries(ve.placa)
+      vehiculo.clear()
+      vehiculo.add(ve._posicion.x, ve._posicion.y)
+    })
   }
 }
