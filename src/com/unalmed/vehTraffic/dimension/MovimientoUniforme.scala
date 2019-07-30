@@ -18,21 +18,22 @@ trait MovimientoUniforme{
       while(tiempo !=0){
         var velocidadVehiculo = _velocidad.magnitud 
         if (velocidadVehiculo > ruta.head.velocidadMaxima) velocidadVehiculo = ruta.head.velocidadMaxima
-        if (_posicion == intersecciones.head.asInstanceOf[Punto]) _velocidad.direccion_=(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
+        if (_posicion == intersecciones.head.asInstanceOf[Punto])_velocidad.direccion_=(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
         val tiempoInterseccion = calculoDt(_posicion, intersecciones.head, velocidadVehiculo)
-        println(Math.sin(_velocidad.direccion.valor).toDegrees)
         if(tiempoInterseccion > tiempo){
           val nuevoY = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.sin(_velocidad.direccion.valor)
           val nuevoX = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.cos(_velocidad.direccion.valor)
-          _posicion.x += nuevoX
-          _posicion.y += nuevoY
+          _posicion = Punto(_posicion.x+nuevoX, _posicion.y+nuevoY)
           tiempo = 0
           
         }else{
           tiempo = tiempo - tiempoInterseccion
-          _posicion.x = intersecciones.head.x
-          _posicion.y = intersecciones.head.y
+          _posicion = Punto(intersecciones.head.x, intersecciones.head.y)
           ruta.dequeue()
+          if (ruta.isEmpty){
+            tiempo = 0
+            intersecciones.dequeue()
+          }
         }
       }
     }

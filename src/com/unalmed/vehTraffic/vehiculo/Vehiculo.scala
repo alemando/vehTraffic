@@ -17,17 +17,21 @@ object Vehiculo{
   
   def apply(): Vehiculo={
     val r= scala.util.Random.nextFloat()
+    val probCarros = Simulacion.proporciónCarros
+    val probMotos = probCarros + Simulacion.proporciónMotos
+    val probBuses = probMotos + Simulacion.proporciónBuses
+    val probCamiones = probBuses + Simulacion.proporciónCamiones
+    val probMotoTaxi = probCamiones + Simulacion.proporciónMotoTaxis
     val velocidad = Simulacion.minVelocidad + scala.util.Random.nextInt({Simulacion.maxVelocidad - Simulacion.minVelocidad})
     val recorrido = Recorrido()
     val nodo = recorrido.origen
-    var contador: Double= 0
-    if (r<contador && r>={contador= contador+Simulacion.proporciónCarros; contador})
+    if (r>=0 && r<=probCarros)
       return Carro(Carro.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
-    else if(r<contador && r>={contador= contador+Simulacion.proporciónMotos; contador})
+    else if(r>probCarros && r<=probMotos)
       return Moto(Moto.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
-    else if(r<contador && r>={contador= contador+Simulacion.proporciónBuses; contador})
+    else if(r>probMotos && r<=probBuses)
       return Bus(Bus.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
-    else if(r<contador && r>={contador= contador+Simulacion.proporciónCamiones; contador})
+    else if(r>probBuses && r<=probCamiones)
       return Camion(Camion.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
     else
       return MotoTaxi(MotoTaxi.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)

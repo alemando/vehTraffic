@@ -2,7 +2,7 @@ package com.unalmed.vehTraffic.simulacion
 
 import scala.collection.mutable.ArrayBuffer
 import com.unalmed.vehTraffic.mallaVial.{Via, Interseccion}
-import com.unalmed.vehTraffic.vehiculo.Vehiculo
+import com.unalmed.vehTraffic.vehiculo.{Vehiculo, Carro}
 import com.unalmed.vehTraffic.dimension.{Sentido,TipoVia}
 import com.unalmed.vehTraffic.util.JsonRW
 import com.unalmed.vehTraffic.base.Grafico
@@ -55,10 +55,6 @@ object Simulacion extends Runnable{
   val _65_80 = new Interseccion(19500, 10500, Some("65 con 30"))
   val gu_37S = new Interseccion(21000, 12000, Some("Guay con 37S"))
   
-  /*val listaIntersecciones: ArrayBuffer[Interseccion] = ArrayBuffer(niquia, lauraAuto, lauraReg, ptoCero, mino, villa, ig65, robledo, colReg, col65, col80,
-      juanOr, maca, expo, reg30, monte, agua, viva, mayor, ferrCol, ferrJuan, sanDiego, premium, pp, santafe, pqEnv, juan65, juan80, _33_65, bule,
-      gema, _30_65, _30_70, _30_80, bol65, gu10, terminal, gu30, gu80,  _65_80, gu_37S)
-  */
   val listaVias = ArrayBuffer(
     new Via(niquia, lauraAuto, 80, TipoVia("Carrera"), Sentido.dobleVia, "64C", "Auto Norte"),
     new Via(niquia, lauraReg, 80, TipoVia("Carrera"), Sentido.dobleVia, "62", "Regional"),
@@ -133,13 +129,9 @@ object Simulacion extends Runnable{
     new Via(viva, gu_37S, 60, TipoVia("Calle"), Sentido.dobleVia, "63", "37S"))
    
   var t: Int = 0
-  
-  val listaVehiculos: ArrayBuffer[Vehiculo] = new ArrayBuffer()
-  
+    
   val listaIntersecciones: ArrayBuffer[Interseccion] = (listaVias.map(_.origen) ++ listaVias.map(_.fin)).distinct
-  
-  
-  
+
   //TODO Generacion autos
   
   //Ubicacion json
@@ -149,8 +141,8 @@ object Simulacion extends Runnable{
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   var config = JsonRW.readConfig(basePath + configFile)
   
-  val dt: Int = config.parametrosSimulacion.dt  *40
-  val tRefresh: Int = config.parametrosSimulacion.tRefresh*500
+  val dt: Int = config.parametrosSimulacion.dt  *10
+  val tRefresh: Int = config.parametrosSimulacion.tRefresh*1000
   val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
   val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
   val minVelocidad: Int = config.parametrosSimulacion.velocidad.minimo  
@@ -165,12 +157,8 @@ object Simulacion extends Runnable{
   
   GrafoVia.construir(listaVias)
   
-  val vehiculo = Vehiculo()
-  listaVehiculos += vehiculo
-  println(vehiculo.recorrido.camino)
-  
-  
-  
+  val listaVehiculos: ArrayBuffer[Vehiculo] = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
+   
   Grafico.iniciarGrafico(listaVias, listaVehiculos, listaIntersecciones)
   
   Grafico.graficarVias(listaVias)
