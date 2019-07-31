@@ -184,6 +184,7 @@ object Simulacion extends Runnable{
     listaVehiculos.clear()
     Placa.placas.clear
     Placa.placas += "" 
+    t = 0
     listaVehiculos = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
     Grafico.iniciarVehiculos(listaVehiculos)
     Main.hilo.start()
