@@ -145,7 +145,7 @@ object Simulacion extends Runnable{
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   var config = JsonRW.readConfig(basePath + configFile)
   
-  val dt: Int = config.parametrosSimulacion.dt  *30
+  val dt: Int = config.parametrosSimulacion.dt
   val tRefresh: Int = config.parametrosSimulacion.tRefresh*1000
   val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
   val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
@@ -168,9 +168,9 @@ object Simulacion extends Runnable{
   def run() {
     running = true
     while (running) {
+      Grafico.graficarVehiculos(listaVehiculos)
       listaVehiculos.foreach(_.cambioPosicion(dt))
       t = t + dt
-      Grafico.graficarVehiculos(listaVehiculos)
       Thread.sleep(tRefresh)
     }
   }
