@@ -10,8 +10,11 @@ import com.unalmed.vehTraffic.base.GrafoVia
 import com.unalmed.vehTraffic.base.Recorrido
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.dimension.Angulo
+import com.unalmed.vehTraffic.vehiculo.Placa
 
 object Simulacion extends Runnable{
+  
+  var running = false 
   
   val niquia = new Interseccion(300, 12000, Some("Niquia"))
   val lauraAuto = new Interseccion(2400, 11400, Some("M. Laura Auto"))
@@ -141,7 +144,7 @@ object Simulacion extends Runnable{
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   var config = JsonRW.readConfig(basePath + configFile)
   
-  val dt: Int = config.parametrosSimulacion.dt  *10
+  val dt: Int = config.parametrosSimulacion.dt  *30
   val tRefresh: Int = config.parametrosSimulacion.tRefresh*1000
   val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
   val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
@@ -153,24 +156,38 @@ object Simulacion extends Runnable{
   val proporciónCamiones: Double = JsonRW.config.parametrosSimulacion.proporciones.camiones  
   val proporciónMotoTaxis: Double = JsonRW.config.parametrosSimulacion.proporciones.motoTaxis
   
-  //TODO Resultados simulacion
+  var listaVehiculos: ArrayBuffer[Vehiculo] = ArrayBuffer()
   
   GrafoVia.construir(listaVias)
-  
-  val listaVehiculos: ArrayBuffer[Vehiculo] = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
    
-  Grafico.iniciarGrafico(listaVias, listaVehiculos, listaIntersecciones)
+  Grafico.iniciarGrafico(listaVias, listaIntersecciones)
   
   Grafico.graficarVias(listaVias)
   
-  run()
-  
   def run() {
-    while (true) {
+    running = true
+    while (running) {
       listaVehiculos.foreach(_.cambioPosicion(dt))
       t = t + dt
       Grafico.graficarVehiculos(listaVehiculos)
       Thread.sleep(tRefresh)
     }
+  }
+  
+  def start(){
+    if (!running && !Thread.interrupted()){
+      Grafico.removerVehiculos(listaVehiculos)
+      listaVehiculos.clear()
+      Placa.placas.clear
+      Placa.placas += "" 
+      listaVehiculos = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
+      Grafico.iniciarVehiculos(listaVehiculos)
+      new Thread(Simulacion).start()
+    }
+  }
+  
+  def stop(){
+    Thread.currentThread().interrupt()
+    running = false
   }
 }

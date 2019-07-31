@@ -34,7 +34,7 @@ import com.unalmed.vehTraffic.vehiculo.Camion
 import com.unalmed.vehTraffic.mallaVial.Via
 import com.unalmed.vehTraffic.mallaVial.Interseccion
 
-object Grafico {
+object Grafico{
   
   val cuadrado = new Rectangle(-4,-4,6,6)
   
@@ -68,19 +68,34 @@ object Grafico {
   renderer.setBasePaint(Color.decode("#cccccc"))
   plot.setRenderer(renderer)
   
-  val ventana: ChartFrame = new ChartFrame("vehTraffic", xyScatterChart);
-	ventana.setVisible(true);
-	ventana.setSize(1300, 700);
-	ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  val ventana: ChartFrame = new ChartFrame("vehTraffic", xyScatterChart)
+	ventana.setVisible(true)
+	ventana.setSize(1300, 700)
+	ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+  ventana.addKeyListener(new keyFrame())
   
-	def iniciarGrafico(vias: ArrayBuffer[Via], vehiculos: ArrayBuffer[Vehiculo], intersecciones: ArrayBuffer[Interseccion]) = {
+	def iniciarGrafico(vias: ArrayBuffer[Via], intersecciones: ArrayBuffer[Interseccion]) = {
     var c: Int = 0
     vias.foreach(v => {
       dataset.addSeries(new XYSeries((c)))
       renderer.setSeriesShapesVisible(c, false)
       c +=1
     })
+    intersecciones.foreach(i => { 
+      val anotacion: XYTextAnnotation = new XYTextAnnotation(i.nombre.getOrElse("Desconocida"), i.x, i.y)
+    	anotacion.setPaint(Color.decode(i.color))
+    	plot.addAnnotation(anotacion)
+    })
+  }
+  
+  def removerVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
+    vehiculos.foreach(ve => {
+      dataset.removeSeries(dataset.getSeriesIndex(ve.placa))
+    })
     
+  }
+  
+  def iniciarVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
     vehiculos.foreach(ve => {
       dataset.addSeries(new XYSeries((ve.placa)))
       val vehiculoIndex = dataset.getSeriesIndex(ve.placa)
@@ -89,11 +104,8 @@ object Grafico {
       renderer.setSeriesPaint(vehiculoIndex, Color.decode(ve.recorrido.destino.color))
       
     })
-    intersecciones.foreach(i => { 
-      val anotacion: XYTextAnnotation = new XYTextAnnotation(i.nombre.getOrElse("Desconocida"), i.x, i.y)
-    	anotacion.setPaint(Color.decode(i.color))
-    	plot.addAnnotation(anotacion)
-    })
+    graficarVehiculos(vehiculos)
+    
   }
 	
 	def figuraGeometrica(n: Vehiculo) = n match {
