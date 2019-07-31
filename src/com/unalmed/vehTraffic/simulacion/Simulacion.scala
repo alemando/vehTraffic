@@ -11,6 +11,7 @@ import com.unalmed.vehTraffic.base.Recorrido
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.dimension.Angulo
 import com.unalmed.vehTraffic.vehiculo.Placa
+import com.unalmed.vehTraffic.base.Main
 
 object Simulacion extends Runnable{
   
@@ -175,19 +176,20 @@ object Simulacion extends Runnable{
   }
   
   def start(){
-    if (!running && !Thread.interrupted()){
-      Grafico.removerVehiculos(listaVehiculos)
-      listaVehiculos.clear()
-      Placa.placas.clear
-      Placa.placas += "" 
-      listaVehiculos = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
-      Grafico.iniciarVehiculos(listaVehiculos)
-      new Thread(Simulacion).start()
+    while(Thread.activeCount()>2){
+      Thread.sleep(100)
     }
+    Main.hilo = new Thread(Simulacion)
+    Grafico.removerVehiculos(listaVehiculos)
+    listaVehiculos.clear()
+    Placa.placas.clear
+    Placa.placas += "" 
+    listaVehiculos = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
+    Grafico.iniciarVehiculos(listaVehiculos)
+    Main.hilo.start()
   }
   
   def stop(){
-    Thread.currentThread().interrupt()
     running = false
   }
 }

@@ -8,6 +8,7 @@ import com.unalmed.vehTraffic.simulacion.Simulacion
 //import scala.collection.mutable.Queue
 
 object Main extends App{
+  
+  var hilo: Thread = _
   Simulacion
-  //
 }

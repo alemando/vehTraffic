@@ -9,6 +9,7 @@ class keyFrame extends KeyListener{
   def keyPressed(event:KeyEvent ) {
 
     if(event.getKeyCode == 116) {
+      Simulacion.stop()
       Simulacion.start()
       }
     if(event.getKeyCode == 117) Simulacion.stop()
