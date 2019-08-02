@@ -7,6 +7,14 @@ case class Velocidad (val magnitud : Double) (var _direccion : Angulo){
   def direccion = _direccion
   
   def direccion_= (angulo: Angulo):Unit = _direccion = angulo
+  
+  def limitarVelocidad(velocidadVia: Double) = {
+    if(this.magnitud < velocidadVia){
+      this.magnitud
+    }else{
+      velocidadVia
+    }
+  }
 }
 object Velocidad{
   

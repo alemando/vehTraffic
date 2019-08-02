@@ -1,25 +1,101 @@
 package com.unalmed.vehTraffic.simulacion
 
 import scala.collection.mutable.ArrayBuffer
-import com.unalmed.vehTraffic.mallaVial.{Via, Interseccion}
+import com.unalmed.vehTraffic.mallaVial.{Via, Interseccion,Sentido, TipoVia}
 import com.unalmed.vehTraffic.vehiculo.{Vehiculo, Carro}
-import com.unalmed.vehTraffic.dimension.{Sentido,TipoVia}
 import com.unalmed.vehTraffic.util.JsonRW
-import com.unalmed.vehTraffic.base.Grafico
-import com.unalmed.vehTraffic.base.GrafoVia
-import com.unalmed.vehTraffic.base.Recorrido
+import com.unalmed.vehTraffic.frame.Grafico
+import com.unalmed.vehTraffic.grafo.GrafoVia
+import com.unalmed.vehTraffic.grafo.Recorrido
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.dimension.Angulo
 import com.unalmed.vehTraffic.vehiculo.Placa
-import com.unalmed.vehTraffic.base.Main
+import com.unalmed.vehTraffic.Main
 
 object Simulacion extends Runnable{
   
-  var _running = false
-  def running: Boolean = _running
-  private def running_=(valor: Boolean): Unit = _running = valor
+  var _hilo: Thread = _
   
-  val niquia = new Interseccion(300, 12000, Some("Niquia"))
+  def hilo: Thread= _hilo
+  
+  def hilo_=(hilo: Thread):Unit = _hilo = hilo
+  
+  private var _running = false
+  
+  private def running: Boolean = _running
+  private def running_=(valor: Boolean): Unit = _running = valor
+
+  private var _t: Double = 0
+  
+  def t: Double = _t
+  
+  private def t_=(t: Double):Unit= _t=t
+  
+  val listaVias = cargarVias()
+  
+  val listaIntersecciones: ArrayBuffer[Interseccion] = (listaVias.map(_.origen) ++ listaVias.map(_.fin)).distinct
+  
+  GrafoVia.construir(listaVias)
+   
+  Grafico.iniciarGrafico(listaVias, listaIntersecciones)
+  
+  Grafico.graficarVias(listaVias)
+  
+  var _listaVehiculos: ArrayBuffer[Vehiculo] = ArrayBuffer()
+  
+  def listaVehiculos: ArrayBuffer[Vehiculo] = _listaVehiculos
+  
+  def listaVehiculos_=(nuevaLista: ArrayBuffer[Vehiculo]): Unit = _listaVehiculos = nuevaLista
+  
+  //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
+  val config = JsonRW.readConfig()
+  
+  val dt: Double = config.parametrosSimulacion.dt
+  val tRefresh: Int = (config.parametrosSimulacion.tRefresh*1000).toInt
+  val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
+  val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
+  val minVelocidad: Int = config.parametrosSimulacion.velocidad.minimo  
+  val maxVelocidad: Int = config.parametrosSimulacion.velocidad.maximo  
+  val proporciónCarros: Double = config.parametrosSimulacion.proporciones.carros 
+  val proporciónMotos: Double = config.parametrosSimulacion.proporciones.motos
+  val proporciónBuses: Double = config.parametrosSimulacion.proporciones.buses
+  val proporciónCamiones: Double = config.parametrosSimulacion.proporciones.camiones  
+  val proporciónMotoTaxis: Double = config.parametrosSimulacion.proporciones.motoTaxis
+  
+  def run() {
+    running = true
+    while (running) {
+      Grafico.graficarVehiculos(listaVehiculos)
+      listaVehiculos.foreach(_.cambioPosicion(dt))
+      t = t + dt
+      Thread.sleep(tRefresh)
+      if (listaVehiculos.filter(x => x.recorrido.destino == x.posicion).length == listaVehiculos.length){
+        running = false
+        new ResultadosSimulacion().imprimir()
+      }
+    }
+  }
+  
+  def start() = {
+    while(Thread.activeCount()>2){
+      Thread.sleep(100)
+    }
+    hilo = new Thread(Simulacion)
+    Grafico.removerVehiculos(listaVehiculos)
+    listaVehiculos.clear()
+    Placa.placas.clear
+    t = 0
+    listaVehiculos = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
+    Grafico.iniciarVehiculos(listaVehiculos)
+    hilo.start()
+  }
+  
+  def stop() = {
+    running = false
+  }
+  
+  def cargarVias():ArrayBuffer[Via] = {
+    val niquia = new Interseccion(300, 12000, Some("Niquia"))
   val lauraAuto = new Interseccion(2400, 11400, Some("M. Laura Auto"))
   val lauraReg = new Interseccion(2400, 12600, Some("M. Laura Reg"))
   val ptoCero = new Interseccion(5400, 12000, Some("Pto 0"))
@@ -133,70 +209,7 @@ object Simulacion extends Runnable{
     new Via(agua, santafe, 60, TipoVia("Calle"), Sentido.dobleVia, "12S", "80"),
     new Via(viva, pqEnv, 60, TipoVia("Calle"), Sentido.dobleVia, "37S", "37S"),
     new Via(viva, gu_37S, 60, TipoVia("Calle"), Sentido.dobleVia, "63", "37S"))
-   
-  var _t: Double = 0
-  def t: Double = _t
-  private def t_=(t: Double):Unit= _t=t
     
-  val listaIntersecciones: ArrayBuffer[Interseccion] = (listaVias.map(_.origen) ++ listaVias.map(_.fin)).distinct
-
-  //TODO Generacion autos
-  
-  //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
-  val config = JsonRW.readConfig()
-  
-  val dt: Double = config.parametrosSimulacion.dt
-  val tRefresh: Int = (config.parametrosSimulacion.tRefresh*1000).toInt
-  val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
-  val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
-  val minVelocidad: Int = config.parametrosSimulacion.velocidad.minimo  
-  val maxVelocidad: Int = config.parametrosSimulacion.velocidad.maximo  
-  val proporciónCarros: Double = JsonRW.config.parametrosSimulacion.proporciones.carros 
-  val proporciónMotos: Double = JsonRW.config.parametrosSimulacion.proporciones.motos
-  val proporciónBuses: Double = JsonRW.config.parametrosSimulacion.proporciones.buses
-  val proporciónCamiones: Double = JsonRW.config.parametrosSimulacion.proporciones.camiones  
-  val proporciónMotoTaxis: Double = JsonRW.config.parametrosSimulacion.proporciones.motoTaxis
-  
-  var _listaVehiculos: ArrayBuffer[Vehiculo] = ArrayBuffer()
-  def listaVehiculos: ArrayBuffer[Vehiculo] = _listaVehiculos
-  def listaVehiculos_=(nuevaLista: ArrayBuffer[Vehiculo]): Unit = _listaVehiculos = nuevaLista
-  
-  GrafoVia.construir(listaVias)
-   
-  Grafico.iniciarGrafico(listaVias, listaIntersecciones)
-  
-  Grafico.graficarVias(listaVias)
-  
-  
-  def run() {
-    running = true
-    while (running) {
-      Grafico.graficarVehiculos(listaVehiculos)
-      listaVehiculos.foreach(_.cambioPosicion(dt))
-      t = t + dt
-      Thread.sleep(tRefresh)
-      if (listaVehiculos.filter(x => x.recorrido.destino == x.posicion).length == listaVehiculos.length){
-        running = false
-        new ResultadosSimulacion().imprimir()
-      }
-    }
-  }
-  
-  def start(){
-    while(Thread.activeCount()>2){
-      Thread.sleep(100)
-    }
-    Main.hilo = new Thread(Simulacion)
-    Grafico.removerVehiculos(listaVehiculos)
-    listaVehiculos.clear()
-    Placa.placas.clear
-    t = 0
-    listaVehiculos = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
-    Grafico.iniciarVehiculos(listaVehiculos)
-    Main.hilo.start()
-  }
-  
-  def stop(){
-    running = false
+    listaVias
   }
 }

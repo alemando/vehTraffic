@@ -1,10 +1,11 @@
-package com.unalmed.vehTraffic.base
+package com.unalmed.vehTraffic.grafo
 
 import scalax.collection.mutable.Graph
 import scalax.collection.edge.WLDiEdge
 import scala.collection.mutable.ArrayBuffer
 import com.unalmed.vehTraffic.mallaVial.{Via, Interseccion}
-import com.unalmed.vehTraffic.dimension.Sentido
+import com.unalmed.vehTraffic.mallaVial.Sentido
+import scalax.collection.mutable.Graph.apply$default$3
 
 object GrafoVia {
   

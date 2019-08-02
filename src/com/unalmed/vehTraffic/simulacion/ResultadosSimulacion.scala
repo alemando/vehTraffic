@@ -1,7 +1,8 @@
 package com.unalmed.vehTraffic.simulacion
 import scala.collection.mutable.ArrayBuffer
 import com.unalmed.vehTraffic.vehiculo._
-import com.unalmed.vehTraffic.dimension.{Sentido, Velocidad}
+import com.unalmed.vehTraffic.dimension.{Velocidad}
+import com.unalmed.vehTraffic.mallaVial.Sentido
 import com.unalmed.vehTraffic.mallaVial.Via
 import com.unalmed.vehTraffic.mallaVial.Interseccion
 import com.unalmed.vehTraffic.util.JsonRW

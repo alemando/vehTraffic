@@ -1,9 +1,10 @@
 package com.unalmed.vehTraffic.vehiculo
 
-import com.unalmed.vehTraffic.dimension.{MovimientoUniforme, Velocidad, Angulo}
+import com.unalmed.vehTraffic.dimension.{Velocidad, Angulo}
+import com.unalmed.vehTraffic.vehiculo.MovimientoUniforme
 import com.unalmed.vehTraffic.mallaVial.{Punto, Interseccion}
 import com.unalmed.vehTraffic.simulacion.Simulacion
-import com.unalmed.vehTraffic.base.Recorrido
+import com.unalmed.vehTraffic.grafo.Recorrido
 import scala.collection.mutable.{Queue, ArrayBuffer}
 import com.unalmed.vehTraffic.mallaVial.Via
 
@@ -23,7 +24,7 @@ object Vehiculo{
     val probBuses = probMotos + Simulacion.proporciónBuses
     val probCamiones = probBuses + Simulacion.proporciónCamiones
     val probMotoTaxi = probCamiones + Simulacion.proporciónMotoTaxis
-    val velocidad = Simulacion.minVelocidad + scala.util.Random.nextInt({Simulacion.maxVelocidad - Simulacion.minVelocidad})
+    val velocidad = Simulacion.minVelocidad + scala.util.Random.nextInt({Simulacion.maxVelocidad + 1 - Simulacion.minVelocidad})
     val recorrido = Recorrido()
     val nodo = recorrido.origen
     val angulo = Angulo.anguloDosPuntos(nodo, recorrido.destino)
@@ -40,7 +41,7 @@ object Vehiculo{
   }
   
   def llenarVehiculos(minimo: Int, maximo: Int): ArrayBuffer[Vehiculo]={
-    val cantidad = minimo + {scala.util.Random.nextInt(maximo-minimo)}
+    val cantidad = minimo + {scala.util.Random.nextInt(maximo+1 -minimo)}
     val todos = ArrayBuffer.fill(cantidad)(Vehiculo())
     todos
   }

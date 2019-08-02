@@ -1,4 +1,4 @@
-package com.unalmed.vehTraffic.base
+package com.unalmed.vehTraffic.frame
 
 //Libreria para frames
 import javax.swing.JFrame

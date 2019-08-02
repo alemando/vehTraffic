@@ -5,8 +5,6 @@ class Interseccion(val longitud : Double,val latitud : Double, val nombre : Opti
   val color = "#%06x".format(scala.util.Random.nextInt(1<<24))
   
   override def toString ={s"${nombre.getOrElse("Desconocida")}"}
-  //TODO name get an setters
-  
 }
 
 object Interseccion{

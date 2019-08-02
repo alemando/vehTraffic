@@ -1,5 +1,7 @@
 package com.unalmed.vehTraffic.mallaVial
 
+import com.unalmed.vehTraffic.dimension.Velocidad
+
 case class Punto(x:Double,y:Double){
   
   def longitudEntrePunto(p: Punto) = {
@@ -23,4 +25,9 @@ object Punto{
     new Punto(nuevaX, nuevaY)
   }
   
+  def cambioEnPosicion(velocidad: Double, tiempo: Double, direccion: Double) = {
+    val nuevoY = Velocidad.kilometroAmetro(velocidad)*tiempo*Math.sin(direccion.toRadians)
+    val nuevoX = Velocidad.kilometroAmetro(velocidad)*tiempo*Math.cos(direccion.toRadians)
+    (nuevoX, nuevoY)
+  }
 }

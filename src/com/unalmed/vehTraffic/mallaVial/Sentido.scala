@@ -1,4 +1,4 @@
-package com.unalmed.vehTraffic.dimension
+package com.unalmed.vehTraffic.mallaVial
 
 case class Sentido private (nombre:String)
 

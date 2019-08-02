@@ -4,7 +4,6 @@ import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.mallaVial.Punto
 
 abstract class Movil(protected var _posicion : Punto, protected var _velocidad : Velocidad) {
-  //TODO get Setters
   def velocidad = _velocidad
   def posicion = _posicion
   def velocidad_=(vel:Velocidad):Unit

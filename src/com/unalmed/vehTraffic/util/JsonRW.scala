@@ -16,8 +16,8 @@ object JsonRW {
     new TiemposSerializer + new MinimoMaximoPromedioSerializer // for json handling
     
   private val basePath: String = System.getProperty("user.dir")+ "\\temp\\"
-  private val configFile: String = "Config.json"
-  private val resultFile: String = "Result.json"
+  private val configFile: String = "parametros.json"
+  private val resultFile: String = "resultados.json"
     
   private var _config: Config = _
   private var _result: Result = _

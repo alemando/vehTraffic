@@ -1,4 +1,4 @@
-package com.unalmed.vehTraffic.dimension
+package com.unalmed.vehTraffic.mallaVial
 
 case class TipoVia(nombre:String) {
   

@@ -2,7 +2,7 @@ package com.unalmed.vehTraffic.vehiculo
 
 import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
-import com.unalmed.vehTraffic.base.Recorrido
+import com.unalmed.vehTraffic.grafo.Recorrido
 
 class Moto(val pla : String, var pos : Punto, var vel : Velocidad, val rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
   

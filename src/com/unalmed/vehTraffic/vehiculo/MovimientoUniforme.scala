@@ -1,10 +1,11 @@
-package com.unalmed.vehTraffic.dimension
+package com.unalmed.vehTraffic.vehiculo
 
 import com.unalmed.vehTraffic.mallaVial.Punto
-import com.unalmed.vehTraffic.base.Recorrido
 import scala.collection.mutable.Queue
 import com.unalmed.vehTraffic.mallaVial.Interseccion
 import com.unalmed.vehTraffic.mallaVial.Via
+import com.unalmed.vehTraffic.dimension.Angulo
+import com.unalmed.vehTraffic.dimension.Velocidad
 
 trait MovimientoUniforme{
   protected var _velocidad : Velocidad
@@ -20,15 +21,12 @@ trait MovimientoUniforme{
     var tiempo = dt
     if(!intersecciones.isEmpty){
       while(tiempo !=0){
-        var velocidadVehiculo = velocidad.magnitud 
-        if (velocidadVehiculo > ruta.head.velocidadMaxima) velocidadVehiculo = ruta.head.velocidadMaxima
+        val velocidadVehiculo = velocidad.limitarVelocidad(ruta.head.velocidadMaxima)
         if (posicion == intersecciones.head.asInstanceOf[Punto]) velocidad= Velocidad(velocidad.magnitud)(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
-//        if (posicion == intersecciones.head.asInstanceOf[Punto])velocidad.direccion_=(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
-        val tiempoInterseccion = calculoDt(_posicion, intersecciones.head, velocidadVehiculo)
+        val tiempoInterseccion = calculoDt(posicion, intersecciones.head, velocidadVehiculo)
         if(tiempoInterseccion > tiempo){
-          val nuevoY = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.sin(velocidad.direccion.valor.toRadians)
-          val nuevoX = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.cos(velocidad.direccion.valor.toRadians)
-          posicion = Punto(posicion.x+nuevoX, posicion.y+nuevoY)
+          val (nuevoX, nuevoY) = Punto.cambioEnPosicion(velocidadVehiculo, tiempo, velocidad.direccion.valor) 
+          posicion = Punto(posicion.x + nuevoX, posicion.y + nuevoY)
           tiempo = 0
           
         }else{
@@ -44,8 +42,8 @@ trait MovimientoUniforme{
     }
   }
   
-  def calculoDt(posActual: Punto, posFin: Punto, velocidad: Double):Int = {
-    (posActual.longitudEntrePunto(posFin)/Velocidad.kilometroAmetro(velocidad)).toInt
+  def calculoDt(posicionActual: Punto, posicionFinal: Punto, velocidad: Double):Double = {
+    posicionActual.longitudEntrePunto(posicionFinal)/Velocidad.kilometroAmetro(velocidad)
   }
   
 }
