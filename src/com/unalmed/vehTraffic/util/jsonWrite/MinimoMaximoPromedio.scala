@@ -16,7 +16,7 @@ case class MinimoMaximoPromedio(private var _minima: Int, private var _maxima: I
   //Setters
   def minima_=(minima: Int) = _minima = minima
   def maxima_=(maxima: Int) = _maxima = maxima
-  def promedio_=(promedio: Int) = _promedio = promedio
+  def promedio_=(promedio: Double) = _promedio = promedio
 
   def getAtributosJson = JField("minima", JInt(minima)) ::
     JField("maxima", JInt(maxima)) ::

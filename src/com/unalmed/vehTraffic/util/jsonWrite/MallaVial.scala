@@ -27,7 +27,7 @@ case class MallaVial(private var _vias: Int, private var _intersecciones: Int, p
   def viasDobleSentido_= (viasDobleSentido : Int) = _viasDobleSentido = viasDobleSentido 
   def velocidadMinima_= (velocidadMinima: Int) = _velocidadMinima = velocidadMinima
   def velocidadMaxima_= (velocidadMaxima: Int) = _velocidadMaxima = velocidadMaxima
-  def longitudPromedio_= (longitudPromedio: Int) = _longitudPromedio = longitudPromedio
+  def longitudPromedio_= (longitudPromedio: Double) = _longitudPromedio = longitudPromedio
   def vehiculosEnInterseccion_= (vehiculosEnInterseccion: VehiculosEnInterseccion) = _vehiculosEnInterseccion = vehiculosEnInterseccion
 
   def getAtributosJson = JField("vias", JInt(vias)) ::

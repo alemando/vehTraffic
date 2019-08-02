@@ -15,6 +15,10 @@ object JsonRW {
     new VehiculosSerializer + new MallaVialSerializer + new VehiculosEnInterseccionSerializer +
     new TiemposSerializer + new MinimoMaximoPromedioSerializer // for json handling
     
+  private val basePath: String = System.getProperty("user.dir")+ "\\temp\\"
+  private val configFile: String = "Config.json"
+  private val resultFile: String = "Result.json"
+    
   private var _config: Config = _
   private var _result: Result = _
   
@@ -28,28 +32,28 @@ object JsonRW {
 
     
   //RW Config methods    
-  def readConfig(pathJsonFile: String): Config = {
-    val json = JsonParser.parse(Source.fromFile(pathJsonFile).getLines.mkString)
+  def readConfig(): Config = {
+    val json = JsonParser.parse(Source.fromFile(basePath + configFile).getLines.mkString)
     config_= (json.extract[Config])
     config
   }
 
-  def writeConfig(config: Config, pathJsonFile: String) = {
-    val pw = new PrintWriter(new File(pathJsonFile))
+  def writeConfig(config: Config) = {
+    val pw = new PrintWriter(new File(basePath + configFile))
     pw.write(write(config))
     pw.close
   }
   
   
   //RW Result methods
-  def readResult(pathJsonFile: String): Result = {
-    val json = JsonParser.parse(Source.fromFile(pathJsonFile).getLines.mkString)
+  def readResult(): Result = {
+    val json = JsonParser.parse(Source.fromFile(basePath + resultFile).getLines.mkString)
     result_= (json.extract[Result])
     result
   }
 
-  def writeResult(result: Result, pathJsonFile: String) = {
-    val pw = new PrintWriter(new File(pathJsonFile))
+  def writeResult(result: Result) = {
+    val pw = new PrintWriter(new File(basePath + resultFile))
     pw.write(write(result))
     pw.close
   }
