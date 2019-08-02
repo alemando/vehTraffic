@@ -16,7 +16,7 @@ trait MovimientoUniforme{
   val ruta : Queue[Via]
   val intersecciones : Queue[Interseccion]
   
-  def cambioPosicion(dt : Int) = {
+  def cambioPosicion(dt : Double) = {
     var tiempo = dt
     if(!intersecciones.isEmpty){
       while(tiempo !=0){

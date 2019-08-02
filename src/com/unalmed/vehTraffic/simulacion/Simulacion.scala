@@ -134,9 +134,9 @@ object Simulacion extends Runnable{
     new Via(viva, pqEnv, 60, TipoVia("Calle"), Sentido.dobleVia, "37S", "37S"),
     new Via(viva, gu_37S, 60, TipoVia("Calle"), Sentido.dobleVia, "63", "37S"))
    
-  var _t: Int = 0
-  def t: Int = _t
-  private def t_=(t: Int):Unit= _t=t
+  var _t: Double = 0
+  def t: Double = _t
+  private def t_=(t: Double):Unit= _t=t
     
   val listaIntersecciones: ArrayBuffer[Interseccion] = (listaVias.map(_.origen) ++ listaVias.map(_.fin)).distinct
 
@@ -145,8 +145,8 @@ object Simulacion extends Runnable{
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   val config = JsonRW.readConfig()
   
-  val dt: Int = config.parametrosSimulacion.dt
-  val tRefresh: Int = config.parametrosSimulacion.tRefresh*50
+  val dt: Double = config.parametrosSimulacion.dt
+  val tRefresh: Int = (config.parametrosSimulacion.tRefresh*1000).toInt
   val minVehiculos: Int = config.parametrosSimulacion.vehiculos.minimo 
   val maxVehiculos: Int = config.parametrosSimulacion.vehiculos.maximo 
   val minVelocidad: Int = config.parametrosSimulacion.velocidad.minimo  
@@ -177,7 +177,7 @@ object Simulacion extends Runnable{
       Thread.sleep(tRefresh)
       if (listaVehiculos.filter(x => x.recorrido.destino == x.posicion).length == listaVehiculos.length){
         running = false
-        ResultadosSimulacion.imprimir()
+        new ResultadosSimulacion().imprimir()
       }
     }
   }

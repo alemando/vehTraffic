@@ -5,7 +5,7 @@ import scala.math.BigInt.int2bigInt
 import scala.reflect.ManifestFactory.classType
 import com.unalmed.vehTraffic.util.SerializableJson
 
-case class ParametrosSimulacion(private var _dt: Int, private var _tRefresh: Int, private var _vehiculos: MinimoMaximo,
+case class ParametrosSimulacion(private var _dt: Double, private var _tRefresh: Double, private var _vehiculos: MinimoMaximo,
                                 private var _velocidad: MinimoMaximo, private var _proporciones: Proporciones)
   extends SerializableJson {
 
@@ -17,14 +17,14 @@ case class ParametrosSimulacion(private var _dt: Int, private var _tRefresh: Int
   def proporciones = _proporciones
   
   //Setters
-  def dt_= (dt: Int) = _dt = dt
-  def tRefresh_= (tRefresh: Int) = _tRefresh = tRefresh
+  def dt_= (dt: Double) = _dt = dt
+  def tRefresh_= (tRefresh: Double) = _tRefresh = tRefresh
   def vehiculos_= (vehiculos: MinimoMaximo) = _vehiculos = vehiculos
   def velocidad_= (velocidad: MinimoMaximo) = _velocidad = velocidad
   def proporciones_= (proporciones: Proporciones) = _proporciones = proporciones
 
-  def getAtributosJson = JField("dt", JInt(dt)) ::
-    JField("tRefresh", JInt(tRefresh)) ::
+  def getAtributosJson = JField("dt", JDouble(dt.toDouble)) ::
+    JField("tRefresh", JDouble(tRefresh.toDouble)) ::
     JField("vehiculos", JObject(vehiculos.getAtributosJson)) ::
     JField("velocidad", JObject(velocidad.getAtributosJson)) ::
     JField("proporciones", JObject(proporciones.getAtributosJson)) :: Nil
@@ -36,10 +36,25 @@ class ParametrosSimulacionSerializer extends Serializer[ParametrosSimulacion] {
 
   def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), ParametrosSimulacion] = {
     case (TypeInfo(ParametrosSimulacionClass, _), json) => json match {
+      case JObject(JField("dt", JDouble(dt)) :: JField("tRefresh", JDouble(tRefresh)) ::
+        JField("vehiculos", vehiculos) :: JField("velocidad", velocidad) ::
+        JField("proporciones", proporciones) :: Nil) =>
+        new ParametrosSimulacion(dt.doubleValue, tRefresh.doubleValue, vehiculos.extract[MinimoMaximo], velocidad.extract[MinimoMaximo],
+          proporciones.extract[Proporciones])
+      case JObject(JField("dt", JInt(dt)) :: JField("tRefresh", JDouble(tRefresh)) ::
+        JField("vehiculos", vehiculos) :: JField("velocidad", velocidad) ::
+        JField("proporciones", proporciones) :: Nil) =>
+        new ParametrosSimulacion(dt.doubleValue, tRefresh.doubleValue, vehiculos.extract[MinimoMaximo], velocidad.extract[MinimoMaximo],
+          proporciones.extract[Proporciones])
+      case JObject(JField("dt", JDouble(dt)) :: JField("tRefresh", JInt(tRefresh)) ::
+        JField("vehiculos", vehiculos) :: JField("velocidad", velocidad) ::
+        JField("proporciones", proporciones) :: Nil) =>
+        new ParametrosSimulacion(dt.doubleValue, tRefresh.doubleValue, vehiculos.extract[MinimoMaximo], velocidad.extract[MinimoMaximo],
+          proporciones.extract[Proporciones])
       case JObject(JField("dt", JInt(dt)) :: JField("tRefresh", JInt(tRefresh)) ::
         JField("vehiculos", vehiculos) :: JField("velocidad", velocidad) ::
         JField("proporciones", proporciones) :: Nil) =>
-        new ParametrosSimulacion(dt.intValue, tRefresh.intValue, vehiculos.extract[MinimoMaximo], velocidad.extract[MinimoMaximo],
+        new ParametrosSimulacion(dt.doubleValue, tRefresh.doubleValue, vehiculos.extract[MinimoMaximo], velocidad.extract[MinimoMaximo],
           proporciones.extract[Proporciones])
       case x => throw new MappingException("Can't convert " + x + " to ParametrosSimulacion")
     }

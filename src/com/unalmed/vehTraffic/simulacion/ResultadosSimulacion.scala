@@ -6,7 +6,7 @@ import com.unalmed.vehTraffic.mallaVial.Via
 import com.unalmed.vehTraffic.mallaVial.Interseccion
 import com.unalmed.vehTraffic.util.JsonRW
 
-object ResultadosSimulacion {
+class ResultadosSimulacion {
   
   //Obtener clase base para resultados (inicializada con todos los valores en 0)
   val result = JsonRW.getResultBaseClass
@@ -56,17 +56,17 @@ object ResultadosSimulacion {
   
   //Tiempos
   val tiempoSimulacion = Simulacion.t
-  result.resultadosSimulacion.tiempos.simulacion_=(tiempoSimulacion)
-  val tiempoRealidad = (Simulacion.t/Simulacion.dt)*Simulacion.tRefresh
-  result.resultadosSimulacion.tiempos.realidad_=(tiempoRealidad)
+  result.resultadosSimulacion.tiempos.simulacion=tiempoSimulacion
+  val tiempoRealidad = (Simulacion.t/Simulacion.dt)*(Simulacion.tRefresh/1000.0)
+  result.resultadosSimulacion.tiempos.realidad=tiempoRealidad
   
   //Velocidad vehículos
   val velocidadMinimaVehiculos = Simulacion.listaVehiculos.map(_.velocidad.magnitud).min
-  result.resultadosSimulacion.velocidades.minima_=(velocidadMinimaVehiculos.toInt)
+  result.resultadosSimulacion.velocidades.minima=velocidadMinimaVehiculos.toInt
   val velocidadMaximaVehiculos = Simulacion.listaVehiculos.map(_.velocidad.magnitud).max
-  result.resultadosSimulacion.velocidades.maxima_=(velocidadMaximaVehiculos.toInt)
+  result.resultadosSimulacion.velocidades.maxima=velocidadMaximaVehiculos.toInt
   val velocidadPromedioVehiculos = Simulacion.listaVehiculos.map(_.velocidad.magnitud).reduce(_+_)/totalVehiculos
-  result.resultadosSimulacion.velocidades.promedio_=(velocidadPromedioVehiculos)
+  result.resultadosSimulacion.velocidades.promedio=velocidadPromedioVehiculos
   
   //Distancia vehículos
   val distanciaMinima = Simulacion.listaVehiculos.map(_.recorrido.camino.get.edges.map(_.label.asInstanceOf[Via].longitud).toList.reduce(_+_)).min

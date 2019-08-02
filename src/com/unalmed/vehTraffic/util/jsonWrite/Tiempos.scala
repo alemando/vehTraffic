@@ -5,18 +5,18 @@ import scala.math.BigInt.int2bigInt
 import scala.reflect.ManifestFactory.classType
 import com.unalmed.vehTraffic.util.SerializableJson
 
-class Tiempos (private var _simulacion: Int, private var _realidad: Int) extends SerializableJson {
+class Tiempos (private var _simulacion: Double, private var _realidad: Double) extends SerializableJson {
   
   //Getters
   def simulacion = _simulacion
   def realidad = _realidad
   
   //Setters
-  def simulacion_= (simulacion: Int) = _simulacion = simulacion
-  def realidad_= (realidad: Int) = _realidad = realidad
+  def simulacion_= (simulacion: Double) = _simulacion = simulacion
+  def realidad_= (realidad: Double) = _realidad = realidad
   
-  def getAtributosJson = JField("simulacion", JInt(simulacion)) ::
-    JField("realidad", JInt(realidad)) :: Nil  
+  def getAtributosJson = JField("simulacion", JDouble(simulacion)) ::
+    JField("realidad", JDouble(realidad)) :: Nil  
   
 }
 
