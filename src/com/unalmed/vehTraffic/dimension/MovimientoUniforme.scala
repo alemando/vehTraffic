@@ -7,8 +7,12 @@ import com.unalmed.vehTraffic.mallaVial.Interseccion
 import com.unalmed.vehTraffic.mallaVial.Via
 
 trait MovimientoUniforme{
-  var _velocidad : Velocidad
-  var _posicion : Punto
+  protected var _velocidad : Velocidad
+  def velocidad: Velocidad
+  def velocidad_=(vel:Velocidad):Unit=_velocidad=vel
+  protected var _posicion : Punto
+  def posicion: Punto
+  def posicion_=(pos:Punto):Unit=_posicion=pos
   val ruta : Queue[Via]
   val intersecciones : Queue[Interseccion]
   
@@ -16,19 +20,20 @@ trait MovimientoUniforme{
     var tiempo = dt
     if(!intersecciones.isEmpty){
       while(tiempo !=0){
-        var velocidadVehiculo = _velocidad.magnitud 
+        var velocidadVehiculo = velocidad.magnitud 
         if (velocidadVehiculo > ruta.head.velocidadMaxima) velocidadVehiculo = ruta.head.velocidadMaxima
-        if (_posicion == intersecciones.head.asInstanceOf[Punto])_velocidad.direccion_=(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
+        if (posicion == intersecciones.head.asInstanceOf[Punto]) velocidad= Velocidad(velocidad.magnitud)(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
+//        if (posicion == intersecciones.head.asInstanceOf[Punto])velocidad.direccion_=(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
         val tiempoInterseccion = calculoDt(_posicion, intersecciones.head, velocidadVehiculo)
         if(tiempoInterseccion > tiempo){
-          val nuevoY = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.sin(_velocidad.direccion.valor)
-          val nuevoX = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.cos(_velocidad.direccion.valor)
-          _posicion = Punto(_posicion.x+nuevoX, _posicion.y+nuevoY)
+          val nuevoY = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.sin(velocidad.direccion.valor.toRadians)
+          val nuevoX = Velocidad.kilometroAmetro(velocidadVehiculo)*tiempo*Math.cos(velocidad.direccion.valor.toRadians)
+          posicion = Punto(posicion.x+nuevoX, posicion.y+nuevoY)
           tiempo = 0
           
         }else{
           tiempo = tiempo - tiempoInterseccion
-          _posicion = Punto(intersecciones.head.x, intersecciones.head.y)
+          posicion = Punto(intersecciones.head.x, intersecciones.head.y)
           ruta.dequeue()
           if (ruta.isEmpty){
             tiempo = 0

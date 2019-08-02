@@ -10,7 +10,7 @@ class Carro(val pla : String, var pos : Punto, var vel : Velocidad, val rec: Rec
 
 object Carro{
   
-  def apply(placa: String, posicion: Punto, velocidad: Velocidad, recorrido: Recorrido):Carro={
+  def apply(posicion: Punto, velocidad: Velocidad, recorrido: Recorrido):Carro={
     new Carro(placa, posicion, velocidad, recorrido)
   }
   
@@ -18,7 +18,7 @@ object Carro{
     val r= scala.util.Random
     val letras = Placa.letras
     var placa: String = ""
-    while(Placa.placas.contains(placa)){
+    while(placa=="" || Placa.placas.contains(placa)){
       placa = (List.fill(3)(letras(r.nextInt(letras.length))):::List.fill(3)(r.nextInt(10))).mkString("")
     }
     Placa.placas += placa

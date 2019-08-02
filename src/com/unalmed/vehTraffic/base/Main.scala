@@ -9,6 +9,8 @@ import com.unalmed.vehTraffic.simulacion.Simulacion
 
 object Main extends App{
   
-  var hilo: Thread = _
+  var _hilo: Thread = _
+  def hilo: Thread= _hilo
+  def hilo_=(hilo: Thread):Unit = _hilo = hilo
   Simulacion
 }

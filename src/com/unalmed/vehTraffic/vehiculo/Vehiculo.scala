@@ -7,8 +7,9 @@ import com.unalmed.vehTraffic.base.Recorrido
 import scala.collection.mutable.{Queue, ArrayBuffer}
 import com.unalmed.vehTraffic.mallaVial.Via
 
-abstract case class Vehiculo(placa : String)(var _posicion : Punto, var _velocidad: Velocidad, val recorrido: Recorrido)
-extends Movil(_posicion,_velocidad) with MovimientoUniforme {
+abstract case class Vehiculo(placa : String)(protected var _p : Punto, protected var _v: Velocidad, val recorrido: Recorrido)
+extends Movil(_p,_v) with MovimientoUniforme {
+  
   val ruta: Queue[Via] = Queue(recorrido.camino.get.edges.map(_.label.asInstanceOf[Via]).toList: _*)
   val intersecciones: Queue[Interseccion] = Queue(recorrido.camino.get.nodes.map(_.value.asInstanceOf[Interseccion]).toList: _*)
 }
@@ -25,16 +26,17 @@ object Vehiculo{
     val velocidad = Simulacion.minVelocidad + scala.util.Random.nextInt({Simulacion.maxVelocidad - Simulacion.minVelocidad})
     val recorrido = Recorrido()
     val nodo = recorrido.origen
+    val angulo = Angulo.anguloDosPuntos(nodo, recorrido.destino)
     if (r>=0 && r<=probCarros)
-      return Carro(Carro.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
+      return Carro(nodo, Velocidad(velocidad)(angulo), recorrido)
     else if(r>probCarros && r<=probMotos)
-      return Moto(Moto.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
+      return Moto(nodo, Velocidad(velocidad)(angulo), recorrido)
     else if(r>probMotos && r<=probBuses)
-      return Bus(Bus.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
+      return Bus(nodo, Velocidad(velocidad)(angulo), recorrido)
     else if(r>probBuses && r<=probCamiones)
-      return Camion(Camion.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
+      return Camion(nodo, Velocidad(velocidad)(angulo), recorrido)
     else
-      return MotoTaxi(MotoTaxi.placa, nodo, Velocidad(velocidad,Angulo(0)), recorrido)
+      return MotoTaxi(nodo, Velocidad(velocidad)(angulo), recorrido)
   }
   
   def llenarVehiculos(minimo: Int, maximo: Int): ArrayBuffer[Vehiculo]={

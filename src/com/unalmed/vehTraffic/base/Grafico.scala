@@ -118,7 +118,7 @@ object Grafico{
 	  
 	  case n: Camion =>  triangulo
 	  
-	  case n: MotoTaxi =>  pentagono
+	  case _ =>  pentagono
 	  
 	}
 	
@@ -136,7 +136,7 @@ object Grafico{
     vehiculos.foreach(ve => {
       val vehiculo =  dataset.getSeries(ve.placa)
       vehiculo.clear()
-      vehiculo.add(ve._posicion.x, ve._posicion.y)
+      vehiculo.add(ve.posicion.x, ve.posicion.y)
     })
   }
 }
