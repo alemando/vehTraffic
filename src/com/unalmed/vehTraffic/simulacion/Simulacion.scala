@@ -142,12 +142,8 @@ object Simulacion extends Runnable{
 
   //TODO Generacion autos
   
-  //Ubicacion json
-  val basePath = System.getProperty("user.dir")+ "\\temp\\"
-  val configFile ="Config.json"
-  
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
-  val config = JsonRW.readConfig(basePath + configFile)
+  val config = JsonRW.readConfig()
   
   val dt: Int = config.parametrosSimulacion.dt
   val tRefresh: Int = config.parametrosSimulacion.tRefresh*50
