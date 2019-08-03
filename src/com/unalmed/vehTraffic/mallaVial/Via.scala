@@ -13,3 +13,16 @@ class Via(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Do
   
   override def toString = {s"${tipo.nombre}: $nombre"}
 }
+
+object Via{
+  
+  def apply(origen:Interseccion, fin: Interseccion, velocidadMaxima: Double, tipo: TipoVia, sentido: Sentido, numero: String, nombre: String): Via={
+    val velocidad = velocidadMaxima match{
+      case n if(velocidadMaxima<0) => 0.0
+      case n if(velocidadMaxima>120) => 120.0
+      case n => velocidadMaxima
+    }
+    new Via(origen, fin, velocidad, tipo, sentido, numero, nombre)
+  }
+  
+}

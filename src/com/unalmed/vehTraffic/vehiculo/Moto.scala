@@ -4,7 +4,12 @@ import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.grafo.Recorrido
 
-class Moto(val pla : String, var pos : Punto, var vel : Velocidad, val rec: Recorrido) extends Vehiculo(pla)(pos, vel, rec){
+class Moto(val pla : String, private var _pos : Punto, private var _vel : Velocidad, val rec: Recorrido) extends Vehiculo(pla)(_pos, _vel, rec){
+  
+  private def pos: Punto= _pos
+  private def vel: Velocidad=_vel
+  private def pos_=(pos: Punto):Unit= _pos=pos
+  private def vel_=(vel: Velocidad):Unit= _vel=vel
   
 }
 object Moto{

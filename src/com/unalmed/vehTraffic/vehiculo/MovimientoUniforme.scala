@@ -22,7 +22,7 @@ trait MovimientoUniforme{
     if(!intersecciones.isEmpty){
       while(tiempo !=0){
         val velocidadVehiculo = velocidad.limitarVelocidad(ruta.head.velocidadMaxima)
-        if (posicion == intersecciones.head.asInstanceOf[Punto]) velocidad= Velocidad(velocidad.magnitud)(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
+        if (posicion == intersecciones.head.asInstanceOf[Punto] && intersecciones.length>=2) velocidad= Velocidad(velocidad.magnitud)(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
         val tiempoInterseccion = calculoDt(posicion, intersecciones.head, velocidadVehiculo)
         if(tiempoInterseccion > tiempo){
           val (nuevoX, nuevoY) = Punto.cambioEnPosicion(velocidadVehiculo, tiempo, velocidad.direccion.valor) 

@@ -2,7 +2,6 @@ package com.unalmed.vehTraffic.grafo
 
 import com.unalmed.vehTraffic.mallaVial.Interseccion
 import com.unalmed.vehTraffic.simulacion.Simulacion
-import com.unalmed.vehTraffic.grafo.GrafoVia
 
 class Recorrido private (val origen: Interseccion, val destino: Interseccion, val camino: Option[GrafoVia.grafo.Path]){
 }

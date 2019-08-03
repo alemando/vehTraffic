@@ -10,7 +10,7 @@ import com.unalmed.vehTraffic.grafo.Recorrido
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.dimension.Angulo
 import com.unalmed.vehTraffic.vehiculo.Placa
-import com.unalmed.vehTraffic.Main
+import com.unalmed.vehTraffic.main.Main
 
 object Simulacion extends Runnable{
   
@@ -62,7 +62,7 @@ object Simulacion extends Runnable{
   val proporciónCamiones: Double = config.parametrosSimulacion.proporciones.camiones  
   val proporciónMotoTaxis: Double = config.parametrosSimulacion.proporciones.motoTaxis
   
-  def run() {
+  def run() { //Si requiere usar el método imprimir para verificar los resultados, debe descomentar la función en ResultadosSimulaion
     running = true
     while (running) {
       Grafico.graficarVehiculos(listaVehiculos)
@@ -71,7 +71,8 @@ object Simulacion extends Runnable{
       Thread.sleep(tRefresh)
       if (listaVehiculos.filter(x => x.recorrido.destino == x.posicion).length == listaVehiculos.length){
         running = false
-        new ResultadosSimulacion().imprimir()
+        new ResultadosSimulacion()//.imprimir()
+        Grafico.graficarVehiculos(listaVehiculos)
       }
     }
   }

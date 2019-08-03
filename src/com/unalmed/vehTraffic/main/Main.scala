@@ -1,4 +1,4 @@
-package com.unalmed.vehTraffic
+package com.unalmed.vehTraffic.main
 
 import com.unalmed.vehTraffic.simulacion.Simulacion
 

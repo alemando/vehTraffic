@@ -1,15 +1,19 @@
 package com.unalmed.vehTraffic.vehiculo
 
 import com.unalmed.vehTraffic.dimension.{Velocidad, Angulo}
-import com.unalmed.vehTraffic.vehiculo.MovimientoUniforme
 import com.unalmed.vehTraffic.mallaVial.{Punto, Interseccion}
 import com.unalmed.vehTraffic.simulacion.Simulacion
 import com.unalmed.vehTraffic.grafo.Recorrido
 import scala.collection.mutable.{Queue, ArrayBuffer}
 import com.unalmed.vehTraffic.mallaVial.Via
 
-abstract case class Vehiculo(placa : String)(protected var _p : Punto, protected var _v: Velocidad, val recorrido: Recorrido)
+abstract case class Vehiculo(placa : String)(private var _p : Punto, private var _v: Velocidad, val recorrido: Recorrido)
 extends Movil(_p,_v) with MovimientoUniforme {
+  
+  private def p: Punto= _p
+  private def v: Velocidad=_v
+  private def p_=(p: Punto):Unit= _p=p
+  private def v_=(v: Velocidad):Unit= _v=v
   
   val ruta: Queue[Via] = Queue(recorrido.camino.get.edges.map(_.label.asInstanceOf[Via]).toList: _*)
   val intersecciones: Queue[Interseccion] = Queue(recorrido.camino.get.nodes.map(_.value.asInstanceOf[Interseccion]).toList: _*)
