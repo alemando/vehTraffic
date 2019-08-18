@@ -6,11 +6,15 @@ import com.unalmed.vehTraffic.mallaVial.Sentido
 import com.unalmed.vehTraffic.mallaVial.Via
 import com.unalmed.vehTraffic.mallaVial.Interseccion
 import com.unalmed.vehTraffic.util.JsonRW
+import com.unalmed.vehTraffic.main.Main
 
 class ResultadosSimulacion {
   
   //Obtener clase base para resultados (inicializada con todos los valores en 0)
   val result = JsonRW.getResultBaseClass
+  
+  //Instancia de simulacion
+  val Simulacion = Main.objectSimulacion
   
   //Vehiculos
   val totalVehiculos = Simulacion.listaVehiculos.length

@@ -2,17 +2,17 @@ package com.unalmed.vehTraffic.frame
 
 import java.awt.event.KeyListener
 import java.awt.event.KeyEvent
-import com.unalmed.vehTraffic.simulacion.Simulacion
+import com.unalmed.vehTraffic.main.Main
 
 class keyFrame extends KeyListener{
   
   def keyPressed(event:KeyEvent ) = {
 
     if(event.getKeyCode == 116) {
-      Simulacion.stop()
-      Simulacion.start()
+      Main.objectSimulacion.stop()
+      Main.objectSimulacion.start()
       }
-    if(event.getKeyCode == 117) Simulacion.stop()
+    if(event.getKeyCode == 117) Main.objectSimulacion.stop()
  
   }
   
