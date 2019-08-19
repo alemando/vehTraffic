@@ -12,7 +12,7 @@ import com.unalmed.vehTraffic.dimension.Angulo
 import com.unalmed.vehTraffic.vehiculo.Placa
 import com.unalmed.vehTraffic.main.Main
 
-class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: ArrayBuffer[Interseccion])extends Runnable{
+class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayBuffer[Interseccion])extends Runnable{
   
   var _hilo: Thread = _
   
@@ -34,13 +34,7 @@ class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: Array
   
   Grafico.graficarVias(listaVias)
   
-  var _listaViajes: ArrayBuffer[Viaje] = ArrayBuffer()
-  def listaViajes: ArrayBuffer[Viaje] = _listaViajes
-  def listaViajes_=(nuevaLista: ArrayBuffer[Viaje]): Unit = _listaViajes = nuevaLista
   
-  var _listaVehiculos: ArrayBuffer[Vehiculo] = ArrayBuffer()
-  def listaVehiculos: ArrayBuffer[Vehiculo] = _listaVehiculos
-  def listaVehiculos_=(nuevaLista: ArrayBuffer[Vehiculo]): Unit = _listaVehiculos = nuevaLista
   
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   val config = JsonRW.readConfig()
@@ -56,6 +50,11 @@ class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: Array
   val proporciónBuses: Double = config.parametrosSimulacion.proporciones.buses
   val proporciónCamiones: Double = config.parametrosSimulacion.proporciones.camiones  
   val proporciónMotoTaxis: Double = config.parametrosSimulacion.proporciones.motoTaxis
+  
+  private val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
+  
+  private val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
+  
   
   def run() { //Si requiere usar el método imprimir para verificar los resultados, debe descomentar la función en ResultadosSimulaion
     running = true
@@ -75,8 +74,6 @@ class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: Array
   
   def start() = {
     hilo = new Thread(this)
-    listaViajes = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
-    listaVehiculos = listaViajes.map(_.vehiculo)
     Grafico.iniciarVehiculos(listaViajes)
     hilo.start()
   }
@@ -87,7 +84,6 @@ class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: Array
   
   def borrar(){
     Grafico.removerVehiculos(listaVehiculos)
-    listaVehiculos.clear()
     Placa.placas.clear
     t = 0
   }

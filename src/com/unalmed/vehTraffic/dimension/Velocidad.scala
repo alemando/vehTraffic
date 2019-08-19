@@ -1,6 +1,7 @@
 package com.unalmed.vehTraffic.dimension
 
 import com.unalmed.vehTraffic.main.Main
+import com.unalmed.vehTraffic.simulacion.Simulacion
 
 case class Velocidad private(val magnitud : Double) (var _direccion : Angulo){
   
@@ -18,11 +19,10 @@ case class Velocidad private(val magnitud : Double) (var _direccion : Angulo){
 }
 object Velocidad{
   
-  def apply(magnitud:Double)(direccion:Angulo):Velocidad={
-    val Simulacion = Main.objectSimulacion
+  def apply(magnitud:Double, direccion:Angulo, simulacion: Simulacion):Velocidad={
     val mag = magnitud match{
-      case n if(magnitud <= Simulacion.minVelocidad) => Simulacion.minVelocidad
-      case n if(magnitud>= Simulacion.maxVelocidad) => Simulacion.maxVelocidad
+      case n if(magnitud <= simulacion.minVelocidad) => simulacion.minVelocidad
+      case n if(magnitud>= simulacion.maxVelocidad) => simulacion.maxVelocidad
       case n => magnitud
     }
     new Velocidad(mag)(direccion)
