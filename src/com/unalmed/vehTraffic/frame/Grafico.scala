@@ -86,24 +86,12 @@ object Grafico{
   
   def removerVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
     vehiculos.foreach(ve => {
-      dataset.removeSeries(dataset.getSeriesIndex(ve.placa))
+      val index = dataset.getSeriesIndex(ve.placa)
+      if (index != -1) dataset.removeSeries(index)
     })
     
   }
   
-//  def iniciarVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
-//    vehiculos.foreach(ve => {
-//      dataset.addSeries(new XYSeries((ve.placa)))
-//      val vehiculoIndex = dataset.getSeriesIndex(ve.placa)
-//      
-//      renderer.setSeriesShape(vehiculoIndex, figuraGeometrica(ve))
-//      renderer.setSeriesPaint(vehiculoIndex, Color.decode(ve.viaje.destino.color))
-//      
-//    })
-//    graficarVehiculos(vehiculos)
-//    
-//  }
-
   def iniciarVehiculos(viajes: ArrayBuffer[Viaje]) = {
     viajes.foreach(viaje => {
       dataset.addSeries(new XYSeries((viaje.vehiculo.placa)))

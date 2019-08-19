@@ -1,5 +1,5 @@
 package com.unalmed.vehTraffic.mallaVial
 
-class Semaforo {
+class Semaforo(val tiempoVerde: Int, val tiempoAmarillo: Int) {
   
 }

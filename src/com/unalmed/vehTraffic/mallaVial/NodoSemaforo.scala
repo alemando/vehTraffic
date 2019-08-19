@@ -1,5 +1,7 @@
 package com.unalmed.vehTraffic.mallaVial
 
-class NodoSemaforo {
+import scala.collection.mutable.ArrayBuffer
+
+class NodoSemaforo(val Semaforos: ArrayBuffer[Semaforo]) {
   
 }

@@ -15,21 +15,6 @@ extends Movil(_p,_v) with MovimientoUniforme {
   private def p_=(p: Punto):Unit= _p=p
   private def v_=(v: Velocidad):Unit= _v=v
   
-//  def cambioPosicion(dt : Double) = {
-//    val error = dt*Velocidad.kilometroAmetro(velocidad.magnitud)
-//    if(!viaje.intersecciones.isEmpty){
-//    if (posicion == viaje.intersecciones.head.asInstanceOf[Punto] && viaje.intersecciones.length>=2 && viaje.ruta.length>=1) {
-//        val interseccionActual = viaje.intersecciones.dequeue()
-//        val viaActual = viaje.ruta.dequeue()
-//        velocidad= Velocidad(velocidad.magnitud)({if (viaActual.origen == interseccionActual)viaActual.anguloOrigen
-//                                                  else viaActual.anguloDestino})}
-//    val interseccionSiguiente = viaje.intersecciones.head
-//    if(posicion.longitudEntrePunto(interseccionSiguiente) >= error){
-//      movimientoRectilineoUniforme(dt)
-//      if(posicion.longitudEntrePunto(interseccionSiguiente) <= 0.5*error) posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)}
-//    else posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-//    }
-//  }
 }
 
 object Vehiculo{
@@ -46,15 +31,15 @@ object Vehiculo{
     val angulo = {if (nodo == viaje.ruta.head.origen)viaje.ruta.head.anguloOrigen
                   else viaje.ruta.head.anguloDestino}
     if (r>=0 && r<=probCarros)
-      return Carro(nodo, Velocidad(velocidad)(angulo))
+      return Carro(nodo, Velocidad(velocidad, angulo, simulacion))
     else if(r>probCarros && r<=probMotos)
-      return Moto(nodo, Velocidad(velocidad)(angulo))
+      return Moto(nodo, Velocidad(velocidad, angulo, simulacion))
     else if(r>probMotos && r<=probBuses)
-      return Bus(nodo, Velocidad(velocidad)(angulo))
+      return Bus(nodo, Velocidad(velocidad, angulo, simulacion))
     else if(r>probBuses && r<=probCamiones)
-      return Camion(nodo, Velocidad(velocidad)(angulo))
+      return Camion(nodo, Velocidad(velocidad, angulo, simulacion))
     else
-      return MotoTaxi(nodo, Velocidad(velocidad)(angulo))
+      return MotoTaxi(nodo, Velocidad(velocidad, angulo, simulacion))
   }
   
 }
