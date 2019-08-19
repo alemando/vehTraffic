@@ -6,7 +6,7 @@ import com.unalmed.vehTraffic.vehiculo.{Vehiculo, Carro}
 import com.unalmed.vehTraffic.util.JsonRW
 import com.unalmed.vehTraffic.frame.Grafico
 import com.unalmed.vehTraffic.grafo.GrafoVia
-import com.unalmed.vehTraffic.grafo.Recorrido
+import com.unalmed.vehTraffic.grafo.Viaje
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.dimension.Angulo
 import com.unalmed.vehTraffic.vehiculo.Placa
@@ -34,10 +34,12 @@ class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: Array
   
   Grafico.graficarVias(listaVias)
   
+  var _listaViajes: ArrayBuffer[Viaje] = ArrayBuffer()
+  def listaViajes: ArrayBuffer[Viaje] = _listaViajes
+  def listaViajes_=(nuevaLista: ArrayBuffer[Viaje]): Unit = _listaViajes = nuevaLista
+  
   var _listaVehiculos: ArrayBuffer[Vehiculo] = ArrayBuffer()
-  
   def listaVehiculos: ArrayBuffer[Vehiculo] = _listaVehiculos
-  
   def listaVehiculos_=(nuevaLista: ArrayBuffer[Vehiculo]): Unit = _listaVehiculos = nuevaLista
   
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
@@ -58,22 +60,24 @@ class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: Array
   def run() { //Si requiere usar el método imprimir para verificar los resultados, debe descomentar la función en ResultadosSimulaion
     running = true
     while (running) {
-      Grafico.graficarVehiculos(listaVehiculos)
-      listaVehiculos.foreach(_.cambioPosicion(dt))
+      Grafico.graficarVehiculos(listaViajes)
+      listaViajes.foreach(_.recorrerEnVehiculo(dt))
       t = t + dt
       Thread.sleep(tRefresh)
-      if (listaVehiculos.filter(x => x.recorrido.destino == x.posicion).length == listaVehiculos.length){
+//      if (listaVehiculos.filter(x => x.viaje.destino == x.posicion).length == listaVehiculos.length){
+      if (listaViajes.filter(x => x.destino == x.vehiculo.posicion).length == listaVehiculos.length){
         running = false
-        new ResultadosSimulacion()//.imprimir()
-        Grafico.graficarVehiculos(listaVehiculos)
+//        new ResultadosSimulacion(this)//.imprimir()
+        Grafico.graficarVehiculos(listaViajes)
       }
     }
   }
   
   def start() = {
     hilo = new Thread(this)
-    listaVehiculos = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos)
-    Grafico.iniciarVehiculos(listaVehiculos)
+    listaViajes = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
+    listaVehiculos = listaViajes.map(_.vehiculo)
+    Grafico.iniciarVehiculos(listaViajes)
     hilo.start()
   }
   

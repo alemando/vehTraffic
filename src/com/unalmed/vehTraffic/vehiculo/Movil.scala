@@ -8,6 +8,6 @@ abstract class Movil(protected var _posicion : Punto, protected var _velocidad :
   def posicion = _posicion
   def velocidad_=(vel:Velocidad):Unit
   def posicion_=(pos:Punto):Unit
-  def cambioPosicion(dt : Double)
+  def movimientoRectilineoUniforme(dt : Double)
   def angulo = velocidad.direccion.valor
 }

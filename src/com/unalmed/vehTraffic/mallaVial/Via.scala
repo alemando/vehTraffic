@@ -1,7 +1,7 @@
 package com.unalmed.vehTraffic.mallaVial
 
 class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Double, 
-    val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : String) extends Recta {
+    val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : Option[String]) extends Recta {
   
   type T = Interseccion
   val origen = or
@@ -16,7 +16,7 @@ class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMax
 
 object Via{
   
-  def apply(origen:Interseccion, fin: Interseccion, velocidadMaxima: Double, tipo: TipoVia, sentido: Sentido, numero: String, nombre: String): Via={
+  def apply(origen:Interseccion, fin: Interseccion, velocidadMaxima: Double, tipo: TipoVia, sentido: Sentido, numero: String, nombre: Option[String]): Via={
     val velocidad = velocidadMaxima match{
       case n if(velocidadMaxima<0) => 0.0
       case n if(velocidadMaxima>120) => 120.0

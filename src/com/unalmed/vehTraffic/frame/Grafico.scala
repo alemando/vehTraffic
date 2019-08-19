@@ -25,12 +25,8 @@ import java.awt.Rectangle
 import java.awt.Polygon
 
 import scala.collection.mutable.ArrayBuffer
-import com.unalmed.vehTraffic.vehiculo.MotoTaxi
-import com.unalmed.vehTraffic.vehiculo.Vehiculo
-import com.unalmed.vehTraffic.vehiculo.Moto
-import com.unalmed.vehTraffic.vehiculo.Carro
-import com.unalmed.vehTraffic.vehiculo.Bus
-import com.unalmed.vehTraffic.vehiculo.Camion
+import com.unalmed.vehTraffic.vehiculo._
+import com.unalmed.vehTraffic.grafo.Viaje
 import com.unalmed.vehTraffic.mallaVial.Via
 import com.unalmed.vehTraffic.mallaVial.Interseccion
 
@@ -95,16 +91,29 @@ object Grafico{
     
   }
   
-  def iniciarVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
-    vehiculos.foreach(ve => {
-      dataset.addSeries(new XYSeries((ve.placa)))
-      val vehiculoIndex = dataset.getSeriesIndex(ve.placa)
+//  def iniciarVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
+//    vehiculos.foreach(ve => {
+//      dataset.addSeries(new XYSeries((ve.placa)))
+//      val vehiculoIndex = dataset.getSeriesIndex(ve.placa)
+//      
+//      renderer.setSeriesShape(vehiculoIndex, figuraGeometrica(ve))
+//      renderer.setSeriesPaint(vehiculoIndex, Color.decode(ve.viaje.destino.color))
+//      
+//    })
+//    graficarVehiculos(vehiculos)
+//    
+//  }
+
+  def iniciarVehiculos(viajes: ArrayBuffer[Viaje]) = {
+    viajes.foreach(viaje => {
+      dataset.addSeries(new XYSeries((viaje.vehiculo.placa)))
+      val vehiculoIndex = dataset.getSeriesIndex(viaje.vehiculo.placa)
       
-      renderer.setSeriesShape(vehiculoIndex, figuraGeometrica(ve))
-      renderer.setSeriesPaint(vehiculoIndex, Color.decode(ve.recorrido.destino.color))
+      renderer.setSeriesShape(vehiculoIndex, figuraGeometrica(viaje.vehiculo))
+      renderer.setSeriesPaint(vehiculoIndex, Color.decode(viaje.destino.color))
       
     })
-    graficarVehiculos(vehiculos)
+    graficarVehiculos(viajes)
     
   }
 	
@@ -132,11 +141,11 @@ object Grafico{
     })
   }
   
-  def graficarVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {
-    vehiculos.foreach(ve => {
-      val vehiculo =  dataset.getSeries(ve.placa)
+  def graficarVehiculos(viajes: ArrayBuffer[Viaje]) = {
+    viajes.foreach(viaje => {
+      val vehiculo =  dataset.getSeries(viaje.vehiculo.placa)
       vehiculo.clear()
-      vehiculo.add(ve.posicion.x, ve.posicion.y)
+      vehiculo.add(viaje.vehiculo.posicion.x, viaje.vehiculo.posicion.y)
     })
   }
 }

@@ -2,9 +2,9 @@ package com.unalmed.vehTraffic.vehiculo
 
 import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
-import com.unalmed.vehTraffic.grafo.Recorrido
+import com.unalmed.vehTraffic.grafo.Viaje
 
-class Bus private(val pla : String, private var _pos : Punto, private var _vel : Velocidad, val rec: Recorrido) extends Vehiculo(pla)(_pos, _vel, rec){
+class Bus private(val pla : String, private var _pos : Punto, private var _vel : Velocidad) extends Vehiculo(pla)(_pos, _vel){
   
   private def pos: Punto= _pos
   private def vel: Velocidad=_vel
@@ -13,8 +13,8 @@ class Bus private(val pla : String, private var _pos : Punto, private var _vel :
 }
 object Bus{
   
-  def apply(posicion: Punto, velocidad: Velocidad, recorrido: Recorrido):Bus={
-    new Bus(placa, posicion, velocidad, recorrido)
+  def apply(posicion: Punto, velocidad: Velocidad):Bus={
+    new Bus(placa, posicion, velocidad)
   }
   
   def placa: String ={

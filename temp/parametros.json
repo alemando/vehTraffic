@@ -1,1 +1,1 @@
-{"parametrosSimulacion": {"dt": 30, "tRefresh": 0.3, "vehiculos": {"minimo": 50, "maximo": 100 }, "velocidad": {"minimo": 40, "maximo": 80}, "proporciones": {"carros": 0.4, "motos": 0.3, "buses": 0.15, "camiones": 0.1, "motoTaxis": 0.05}}}
+{"parametrosSimulacion": {"dt": 30, "tRefresh": 0.5, "vehiculos": {"minimo": 25, "maximo": 30 }, "velocidad": {"minimo": 40, "maximo": 80}, "proporciones": {"carros": 0.4, "motos": 0.3, "buses": 0.15, "camiones": 0.1, "motoTaxis": 0.05}}}

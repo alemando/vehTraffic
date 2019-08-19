@@ -2,12 +2,12 @@ package com.unalmed.vehTraffic.vehiculo
 
 import com.unalmed.vehTraffic.dimension.{Velocidad, Angulo}
 import com.unalmed.vehTraffic.mallaVial.{Punto, Interseccion}
-import com.unalmed.vehTraffic.main.Main
-import com.unalmed.vehTraffic.grafo.Recorrido
+import com.unalmed.vehTraffic.simulacion.Simulacion
+import com.unalmed.vehTraffic.grafo.Viaje
 import scala.collection.mutable.{Queue, ArrayBuffer}
 import com.unalmed.vehTraffic.mallaVial.Via
 
-abstract case class Vehiculo (placa : String)(private var _p : Punto, private var _v: Velocidad, val recorrido: Recorrido)
+abstract case class Vehiculo(placa : String)(private var _p : Punto, private var _v: Velocidad)
 extends Movil(_p,_v) with MovimientoUniforme {
   
   private def p: Punto= _p
@@ -15,74 +15,46 @@ extends Movil(_p,_v) with MovimientoUniforme {
   private def p_=(p: Punto):Unit= _p=p
   private def v_=(v: Velocidad):Unit= _v=v
   
-  val ruta: Queue[Via] = Queue(recorrido.camino.get.edges.map(_.label.asInstanceOf[Via]).toList: _*)
-  val intersecciones: Queue[Interseccion] = Queue(recorrido.camino.get.nodes.map(_.value.asInstanceOf[Interseccion]).toList: _*)
-  
-  def cambioPosicion(dt : Double) = {
-    var tiempo = dt
-    if(!intersecciones.isEmpty){
-      while(tiempo !=0){
-        val velocidadVehiculo = velocidad.limitarVelocidad(ruta.head.velocidadMaxima)
-        //Side effects con el angulo
-        //if (posicion == intersecciones.head.asInstanceOf[Punto] && intersecciones.length>=2) velocidad= Velocidad(velocidad.magnitud)(Angulo.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
-        if (posicion == intersecciones.head.asInstanceOf[Punto] && intersecciones.length>=2) velocidad= Velocidad(velocidad.magnitud)(ruta.head.anguloDosPuntos(intersecciones.dequeue(), intersecciones.head))
-        val tiempoInterseccion = calculoDt(posicion, intersecciones.head, velocidadVehiculo)
-        if(tiempoInterseccion > tiempo){
-          val (nuevoX, nuevoY) = Punto.cambioEnPosicion(velocidadVehiculo, tiempo, velocidad.direccion.valor) 
-          posicion = Punto(posicion.x + nuevoX, posicion.y + nuevoY)
-          tiempo = 0
-          
-        }else{
-          tiempo = tiempo - tiempoInterseccion
-          posicion = Punto(intersecciones.head.x, intersecciones.head.y)
-          ruta.dequeue()
-          if (ruta.isEmpty){
-            tiempo = 0
-            intersecciones.dequeue()
-          }
-        }
-      }
-    }
-  }
-  
-  def calculoDt(posicionActual: Punto, posicionFinal: Punto, velocidad: Double):Double = {
-    posicionActual.longitudEntrePunto(posicionFinal)/Velocidad.kilometroAmetro(velocidad)
-  }
-  
+//  def cambioPosicion(dt : Double) = {
+//    val error = dt*Velocidad.kilometroAmetro(velocidad.magnitud)
+//    if(!viaje.intersecciones.isEmpty){
+//    if (posicion == viaje.intersecciones.head.asInstanceOf[Punto] && viaje.intersecciones.length>=2 && viaje.ruta.length>=1) {
+//        val interseccionActual = viaje.intersecciones.dequeue()
+//        val viaActual = viaje.ruta.dequeue()
+//        velocidad= Velocidad(velocidad.magnitud)({if (viaActual.origen == interseccionActual)viaActual.anguloOrigen
+//                                                  else viaActual.anguloDestino})}
+//    val interseccionSiguiente = viaje.intersecciones.head
+//    if(posicion.longitudEntrePunto(interseccionSiguiente) >= error){
+//      movimientoRectilineoUniforme(dt)
+//      if(posicion.longitudEntrePunto(interseccionSiguiente) <= 0.5*error) posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)}
+//    else posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
+//    }
+//  }
 }
+
 object Vehiculo{
   
-  def apply(): Vehiculo={
-    
-    val Simulacion = Main.objectSimulacion
+  def apply(simulacion: Simulacion, viaje: Viaje): Vehiculo={
     val r= scala.util.Random.nextFloat()
-    val probCarros = Simulacion.proporciónCarros
-    val probMotos = probCarros + Simulacion.proporciónMotos
-    val probBuses = probMotos + Simulacion.proporciónBuses
-    val probCamiones = probBuses + Simulacion.proporciónCamiones
-    val probMotoTaxi = probCamiones + Simulacion.proporciónMotoTaxis
-    val velocidad = Simulacion.minVelocidad + scala.util.Random.nextInt({Simulacion.maxVelocidad + 1 - Simulacion.minVelocidad})
-    val recorrido = Recorrido()
-    val nodo = recorrido.origen
-    //val angulo = Angulo.anguloDosPuntos(nodo, recorrido.destino)
-    val angulo = recorrido.camino.get.edges.map(_.label.asInstanceOf[Via]).toList(0).anguloDosPuntos(nodo, recorrido.destino)
+    val probCarros = simulacion.proporciónCarros
+    val probMotos = probCarros + simulacion.proporciónMotos
+    val probBuses = probMotos + simulacion.proporciónBuses
+    val probCamiones = probBuses + simulacion.proporciónCamiones
+    val probMotoTaxi = probCamiones + simulacion.proporciónMotoTaxis
+    val velocidad = simulacion.minVelocidad + scala.util.Random.nextInt({simulacion.maxVelocidad + 1 - simulacion.minVelocidad})
+    val nodo = viaje.intersecciones.head
+    val angulo = {if (nodo == viaje.ruta.head.origen)viaje.ruta.head.anguloOrigen
+                  else viaje.ruta.head.anguloDestino}
     if (r>=0 && r<=probCarros)
-      return Carro(nodo, Velocidad(velocidad)(angulo), recorrido)
+      return Carro(nodo, Velocidad(velocidad)(angulo))
     else if(r>probCarros && r<=probMotos)
-      return Moto(nodo, Velocidad(velocidad)(angulo), recorrido)
+      return Moto(nodo, Velocidad(velocidad)(angulo))
     else if(r>probMotos && r<=probBuses)
-      return Bus(nodo, Velocidad(velocidad)(angulo), recorrido)
+      return Bus(nodo, Velocidad(velocidad)(angulo))
     else if(r>probBuses && r<=probCamiones)
-      return Camion(nodo, Velocidad(velocidad)(angulo), recorrido)
+      return Camion(nodo, Velocidad(velocidad)(angulo))
     else
-      return MotoTaxi(nodo, Velocidad(velocidad)(angulo), recorrido)
+      return MotoTaxi(nodo, Velocidad(velocidad)(angulo))
   }
-  
-  def llenarVehiculos(minimo: Int, maximo: Int): ArrayBuffer[Vehiculo]={
-    val cantidad = minimo + {scala.util.Random.nextInt(maximo+1 -minimo)}
-    val todos = ArrayBuffer.fill(cantidad)(Vehiculo())
-    todos
-  }
-  
   
 }
