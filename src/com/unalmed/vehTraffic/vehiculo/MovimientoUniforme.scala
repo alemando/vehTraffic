@@ -15,7 +15,7 @@ trait MovimientoUniforme{
   def posicion: Punto
   def posicion_=(pos:Punto):Unit=_posicion=pos
     
-  def movimientoRectilineoUniforme (t: Double):Unit = {
+  def aplicarMovimientoRectilineoUniforme (t: Double):Unit = {
     val theta = velocidad.direccion.valor.toRadians
     val v = Velocidad.kilometroAmetro(velocidad.magnitud)
     val dy = v*t*Math.sin(theta)

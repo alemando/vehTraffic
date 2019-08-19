@@ -51,9 +51,9 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   val proporciónCamiones: Double = config.parametrosSimulacion.proporciones.camiones  
   val proporciónMotoTaxis: Double = config.parametrosSimulacion.proporciones.motoTaxis
   
-  private val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
+  val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
   
-  private val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
+  val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
   
   
   def run() { //Si requiere usar el método imprimir para verificar los resultados, debe descomentar la función en ResultadosSimulaion
@@ -66,7 +66,7 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
 //      if (listaVehiculos.filter(x => x.viaje.destino == x.posicion).length == listaVehiculos.length){
       if (listaViajes.filter(x => x.destino == x.vehiculo.posicion).length == listaVehiculos.length){
         running = false
-//        new ResultadosSimulacion(this)//.imprimir()
+        new ResultadosSimulacion(this)//.imprimir()
         Grafico.graficarVehiculos(listaViajes)
       }
     }
