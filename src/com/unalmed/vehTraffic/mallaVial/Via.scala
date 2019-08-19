@@ -1,6 +1,6 @@
 package com.unalmed.vehTraffic.mallaVial
 
-class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Double, 
+class Via(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Double, 
     val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : String) extends Recta {
   
   type T = Interseccion

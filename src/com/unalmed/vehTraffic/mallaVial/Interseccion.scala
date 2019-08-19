@@ -1,6 +1,6 @@
 package com.unalmed.vehTraffic.mallaVial
 
-class Interseccion private(val longitud : Double,val latitud : Double, val nombre : Option[String]) extends Punto(longitud,latitud){
+class Interseccion(val longitud : Double,val latitud : Double, val nombre : Option[String]) extends Punto(longitud,latitud){
   
   val color = "#%06x".format(scala.util.Random.nextInt(1<<24))
   
