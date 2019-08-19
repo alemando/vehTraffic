@@ -9,10 +9,10 @@ class keyFrame extends KeyListener{
   def keyPressed(event:KeyEvent ) = {
 
     if(event.getKeyCode == 116) {
-      Simulacion.stop()
-      Simulacion.start()
+      if (Main.objectSimulacion != null) Main.stop()
+      Main.start()
       }
-    if(event.getKeyCode == 117) Simulacion.stop()
+    if(event.getKeyCode == 117) if (Main.objectSimulacion != null) Main.stop()
  
   }
   
