@@ -9,7 +9,7 @@ import scala.collection.mutable.{Queue,ArrayBuffer}
 class Viaje private (val origen: Interseccion, val destino: Interseccion, val ruta: Queue[Via], val intersecciones: Queue[Interseccion])(simulacion:Simulacion){
   val vehiculo = Vehiculo(simulacion,this)
   
-  def recorrerEnVehiculo(dt : Double) = {
+  def recorrerEnVehiculo(dt : Double):Unit = {
     val error = dt*Velocidad.kilometroAmetro(vehiculo.velocidad.magnitud)
     if(!intersecciones.isEmpty){
     if (vehiculo.posicion == intersecciones.head.asInstanceOf[Punto] && intersecciones.length>=2 && ruta.length>=1) {
@@ -17,11 +17,13 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ru
         val viaActual = ruta.dequeue()
         vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)({if (viaActual.origen == interseccionActual)viaActual.anguloOrigen
                                                   else viaActual.anguloDestino})}
+    val distanciaViaActual = if(!ruta.isEmpty)ruta.head.longitud else error
     val interseccionSiguiente = intersecciones.head
     if(vehiculo.posicion.longitudEntrePunto(interseccionSiguiente) >= error){
       vehiculo.movimientoRectilineoUniforme(dt)
       if(vehiculo.posicion.longitudEntrePunto(interseccionSiguiente) <= 0.5*error) vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)}
-    else vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
+    else{ vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
+          if(distanciaViaActual<error)recorrerEnVehiculo(dt*(error-distanciaViaActual)/error)}
     }
   }
 }
