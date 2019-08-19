@@ -2,7 +2,7 @@ package com.unalmed.vehTraffic.frame
 
 import java.awt.event.KeyListener
 import java.awt.event.KeyEvent
-import com.unalmed.vehTraffic.simulacion.Simulacion
+import com.unalmed.vehTraffic.main.Main
 
 class keyFrame extends KeyListener{
   

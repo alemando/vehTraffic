@@ -9,6 +9,7 @@ import scala.collection.mutable.ArrayBuffer
 import com.unalmed.vehTraffic.frame.Grafico
 
 object Main extends App{
+
   val listaVias = cargarVias()
   
   val listaIntersecciones: ArrayBuffer[Interseccion] = (listaVias.map(_.origen) ++ listaVias.map(_.fin)).distinct

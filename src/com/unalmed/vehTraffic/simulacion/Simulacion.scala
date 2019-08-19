@@ -30,7 +30,6 @@ class Simulacion(val listaVias: ArrayBuffer[Via], val listaIntersecciones: Array
   def t: Double = _t
   
   private def t_=(t: Double):Unit= _t=t
-  
   GrafoVia.construir(listaVias)
   
   Grafico.graficarVias(listaVias)
