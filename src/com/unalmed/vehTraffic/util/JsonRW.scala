@@ -13,7 +13,8 @@ object JsonRW {
     new ConfigSerializer + new ParametrosSimulacionSerializer + new MinimoMaximoSerializer +
     new ProporcionesSerializer + new ResultSerializer + new ResultadosSimulacionSerializer +
     new VehiculosSerializer + new MallaVialSerializer + new VehiculosEnInterseccionSerializer +
-    new TiemposSerializer + new MinimoMaximoPromedioSerializer // for json handling
+    new TiemposSerializer + new MinimoMaximoPromedioSerializer + new SemaforosSerializer 
+    // for json handling
     
   private val basePath: String = System.getProperty("user.dir")+ "\\temp\\"
   private val configFile: String = "parametros.json"
