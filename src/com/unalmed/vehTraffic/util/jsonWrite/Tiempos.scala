@@ -25,8 +25,8 @@ class TiemposSerializer extends Serializer[Tiempos] {
 
   def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), Tiempos] = {
     case (TypeInfo(TiemposClass, _), json) => json match {
-      case JObject(JField("simulacion", JInt(simulacion)) :: JField("realidad", JInt(realidad)) :: Nil) =>
-        new Tiempos(simulacion.intValue, realidad.intValue)
+      case JObject(JField("simulacion", JDouble(simulacion)) :: JField("realidad", JDouble(realidad)) :: Nil) =>
+        new Tiempos(simulacion.doubleValue, realidad.doubleValue)
       case x => throw new MappingException("Can't convert " + x + " to Tiempos")
     }
   }

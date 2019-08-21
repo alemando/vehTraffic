@@ -14,7 +14,7 @@ object JsonRW {
     new ProporcionesSerializer + new ResultSerializer + new ResultadosSimulacionSerializer +
     new VehiculosSerializer + new MallaVialSerializer + new VehiculosEnInterseccionSerializer +
     new TiemposSerializer + new MinimoMaximoPromedioSerializer + new SemaforosSerializer +
-    new DistanciasFrenadoVehiculosSerializer
+    new DistanciasFrenadoVehiculosSerializer + new ComparendosSerializer
     // for json handling
     
   private val basePath: String = System.getProperty("user.dir")+ "\\temp\\"
@@ -68,7 +68,8 @@ object JsonRW {
         new MallaVial(0, 0, 0, 0, 0, 0, 0, new VehiculosEnInterseccion(0, 0, 0, 0)),
         new Tiempos(0, 0),
         new MinimoMaximoPromedio(0, 0, 0),
-        new MinimoMaximoPromedio(0, 0, 0)))
+        new MinimoMaximoPromedio(0, 0, 0),
+        new Comparendos(0, 0.0)))
 
     result
   }
