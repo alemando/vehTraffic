@@ -19,10 +19,10 @@ case class Velocidad private(val magnitud : Double) (var _direccion : Angulo){
 }
 object Velocidad{
   
-  def apply(magnitud:Double, direccion:Angulo, simulacion: Simulacion):Velocidad={
+  def apply(magnitud:Double, direccion:Angulo, velocidadMaxima: Double=500.0):Velocidad={
     val mag = magnitud match{
-      case n if(magnitud <= simulacion.minVelocidad) => simulacion.minVelocidad
-      case n if(magnitud>= simulacion.maxVelocidad) => simulacion.maxVelocidad
+      case n if(magnitud <= 0.0) => 0.0
+      case n if(magnitud>= velocidadMaxima) => velocidadMaxima
       case n => magnitud
     }
     new Velocidad(mag)(direccion)

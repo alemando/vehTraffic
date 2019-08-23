@@ -4,7 +4,8 @@ import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.grafo.Viaje
 
-class Moto private (val pla : String, private var _pos : Punto, private var _vel : Velocidad) extends Vehiculo(pla)(_pos, _vel){
+class Moto private (val pla : String, private var _pos : Punto, private var _vel : Velocidad, private val velCruc:Double, private val ace: Double) 
+extends Vehiculo(pla)(_pos, _vel, velCruc, ace){
   
   private def pos: Punto= _pos
   private def vel: Velocidad=_vel
@@ -14,8 +15,8 @@ class Moto private (val pla : String, private var _pos : Punto, private var _vel
 }
 object Moto{
   
-  def apply(posicion: Punto, velocidad: Velocidad):Moto={
-    new Moto(placa, posicion, velocidad)
+  def apply(posicion: Punto, velocidad: Velocidad, velocidadCrucero: Double, aceleracion: Double):Moto={
+    new Moto(placa, posicion, velocidad, velocidadCrucero, aceleracion)
   }
   
   def placa: String ={

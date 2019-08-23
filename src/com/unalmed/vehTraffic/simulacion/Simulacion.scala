@@ -50,6 +50,10 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   val proporciónBuses: Double = config.parametrosSimulacion.proporciones.buses
   val proporciónCamiones: Double = config.parametrosSimulacion.proporciones.camiones  
   val proporciónMotoTaxis: Double = config.parametrosSimulacion.proporciones.motoTaxis
+  val minAceleracion: Int = 5
+  val maxAceleracion: Int = 20
+  val xSemaforoFrenar: Int = 40
+  val xSemaforoAmarilloContinuar: Int = 20
   
   val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
   
@@ -68,6 +72,7 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
         running = false
         new ResultadosSimulacion(this)//.imprimir()
         Grafico.graficarVehiculos(listaViajes)
+        println("Se acabó")
       }
     }
   }

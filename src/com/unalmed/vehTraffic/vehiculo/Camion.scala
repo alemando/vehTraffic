@@ -4,7 +4,8 @@ import com.unalmed.vehTraffic.mallaVial.Punto
 import com.unalmed.vehTraffic.dimension.Velocidad
 import com.unalmed.vehTraffic.grafo.Viaje
 
-class Camion private (val pla : String, private var _pos : Punto, private var _vel : Velocidad) extends Vehiculo(pla)(_pos, _vel){
+class Camion private (val pla : String, private var _pos : Punto, private var _vel : Velocidad, private val velCruc:Double, private val ace: Double) 
+extends Vehiculo(pla)(_pos, _vel, velCruc, ace){
   
   private def pos: Punto= _pos
   private def vel: Velocidad=_vel
@@ -13,8 +14,8 @@ class Camion private (val pla : String, private var _pos : Punto, private var _v
 }
 object Camion{
   
-  def apply(posicion: Punto, velocidad: Velocidad):Camion={
-    new Camion(placa, posicion, velocidad)
+  def apply(posicion: Punto, velocidad: Velocidad, velocidadCrucero: Double, aceleracion: Double):Camion={
+    new Camion(placa, posicion, velocidad, velocidadCrucero, aceleracion)
   }
   
   def placa: String ={
