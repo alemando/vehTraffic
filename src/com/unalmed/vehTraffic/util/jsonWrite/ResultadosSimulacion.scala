@@ -6,7 +6,8 @@ import scala.reflect.ManifestFactory.classType
 import com.unalmed.vehTraffic.util.SerializableJson
 
 case class ResultadosSimulacion(private var _vehiculos: Vehiculos, private var _mallaVial: MallaVial, private var _tiempos: Tiempos,
-                                private var _velocidades: MinimoMaximoPromedio, private var _distancias: MinimoMaximoPromedio)
+                                private var _velocidades: MinimoMaximoPromedio, private var _distancias: MinimoMaximoPromedio,
+                                private var _comparendos: Comparendos)
   extends SerializableJson {
 
   //Getters
@@ -15,6 +16,7 @@ case class ResultadosSimulacion(private var _vehiculos: Vehiculos, private var _
   def tiempos = _tiempos
   def velocidades = _velocidades
   def distancias = _distancias
+  def comparendos = _comparendos
   
   //Setters
   def vehiculos_= (vehiculos: Vehiculos) = _vehiculos = vehiculos
@@ -22,12 +24,14 @@ case class ResultadosSimulacion(private var _vehiculos: Vehiculos, private var _
   def tiempos_= (tiempos: Tiempos) = _tiempos = tiempos
   def velocidades_= (velocidades: MinimoMaximoPromedio) = _velocidades = velocidades
   def distancias_= (distancias: MinimoMaximoPromedio) = _distancias = distancias
+  def comparendos_= (comparendos: Comparendos) = _comparendos = comparendos
 
   def getAtributosJson = JField("vehiculos", JObject(vehiculos.getAtributosJson)) ::
     JField("mallaVial", JObject(mallaVial.getAtributosJson)) ::
     JField("tiempos", JObject(tiempos.getAtributosJson)) ::
     JField("velocidades", JObject(velocidades.getAtributosJson)) ::
-    JField("distancias", JObject(distancias.getAtributosJson)) :: Nil
+    JField("distancias", JObject(distancias.getAtributosJson)) ::
+    JField("comparendos", JObject(comparendos.getAtributosJson)) :: Nil
 }
 
 class ResultadosSimulacionSerializer extends Serializer[ResultadosSimulacion] {
@@ -39,13 +43,15 @@ class ResultadosSimulacionSerializer extends Serializer[ResultadosSimulacion] {
         JField("mallaVial", mallaVial) ::
         JField("tiempos", tiempos) ::
         JField("velocidades", velocidades) ::
-        JField("distancias", distancias) :: Nil) =>
+        JField("distancias", distancias) :: 
+        JField("comparendos", comparendos) ::Nil) =>
         new ResultadosSimulacion(
           vehiculos.extract[Vehiculos],
           mallaVial.extract[MallaVial],
           tiempos.extract[Tiempos],
           velocidades.extract[MinimoMaximoPromedio],
-          distancias.extract[MinimoMaximoPromedio])
+          distancias.extract[MinimoMaximoPromedio],
+          comparendos.extract[Comparendos])
       case x => throw new MappingException("Can't convert " + x + " to ResultadosSimulacion")
     }
   }

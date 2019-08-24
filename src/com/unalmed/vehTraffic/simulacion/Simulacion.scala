@@ -50,6 +50,10 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   val proporciónBuses: Double = config.parametrosSimulacion.proporciones.buses
   val proporciónCamiones: Double = config.parametrosSimulacion.proporciones.camiones  
   val proporciónMotoTaxis: Double = config.parametrosSimulacion.proporciones.motoTaxis
+  val minAceleracion: Int = 5
+  val maxAceleracion: Int = 20
+  val xSemaforoFrenar: Int = 40
+  val xSemaforoAmarilloContinuar: Int = 20
   val minTiempoVerde: Int = 20
   val maxTiempoVerde: Int = 40
   val tiempoAmarillo: Int = 3
@@ -57,6 +61,7 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   generarSemaforos()
   
   val listaNodosSemaforos = ArrayBuffer(listaVias.map(via => via.semaforos).reduce(_++_).groupBy(_.interseccion).map(ArraySemaforos => new NodoSemaforo(ArraySemaforos._2)).toArray:_*)
+  
   
   val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
   
@@ -76,6 +81,7 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
         running = false
         new ResultadosSimulacion(this)//.imprimir()
         Grafico.graficarVehiculos(listaViajes)
+        println("Se acabó")
       }
     }
   }

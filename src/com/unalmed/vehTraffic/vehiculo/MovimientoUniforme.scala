@@ -7,13 +7,7 @@ import com.unalmed.vehTraffic.mallaVial.Via
 import com.unalmed.vehTraffic.dimension.Angulo
 import com.unalmed.vehTraffic.dimension.Velocidad
 
-trait MovimientoUniforme{
-  protected var _velocidad : Velocidad
-  def velocidad: Velocidad
-  def velocidad_=(vel:Velocidad):Unit=_velocidad=vel
-  protected var _posicion : Punto
-  def posicion: Punto
-  def posicion_=(pos:Punto):Unit=_posicion=pos
+trait MovimientoUniforme extends Movil{
     
   def aplicarMovimientoRectilineoUniforme (t: Double):Unit = {
     val theta = velocidad.direccion.valor.toRadians
@@ -21,6 +15,12 @@ trait MovimientoUniforme{
     val dy = v*t*Math.sin(theta)
     val dx = v*t*Math.cos(theta)
     posicion=Punto(posicion.x+dx,posicion.y+dy)
+  }
+  
+  def maximaDistanciaUniforme(t:Double):Double={
+    val v = velocidadCrucero
+    val dx = v*t
+    dx
   }
 
 }
