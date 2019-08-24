@@ -19,15 +19,16 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
         val interseccionActual = intersecciones.dequeue()
         val viaActual = ruta.dequeue()
         vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, viaActual))
-        }
+      }
       val interseccionSiguiente = intersecciones.head
       val longitudCarroAInterseccion = vehiculo.posicion.longitudEntrePunto(interseccionSiguiente)
       val longitudARecorrer = if(!ruta.isEmpty)maximaDistancia-longitudCarroAInterseccion else maximaDistancia
       if(longitudCarroAInterseccion >= maximaDistancia) vehiculo.aplicarMovimientoRectilineoUniforme(dt) 
-      else{vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-           val nuevodt=dt*(maximaDistancia-longitudARecorrer)/maximaDistancia
-           if(longitudARecorrer<maximaDistancia)recorrerEnVehiculo(nuevodt)
-           }
+      else{
+         vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
+         val nuevodt=dt*(maximaDistancia-longitudARecorrer)/maximaDistancia
+         if(longitudARecorrer<maximaDistancia)recorrerEnVehiculo(nuevodt)
+      }
     }
   }
 }

@@ -1,7 +1,10 @@
 package com.unalmed.vehTraffic.mallaVial
 
+import scala.collection.mutable.ArrayBuffer
+
 class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Double, 
-    val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : Option[String]) extends Recta {
+    val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : Option[String], 
+    private var _semaforos: Option[ArrayBuffer[Semaforo]]) extends Recta {
   
   type T = Interseccion
   val origen = or
@@ -10,6 +13,10 @@ class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMax
   def longitud = {
     Math.sqrt(Math.pow((fin.x - origen.x),2) + Math.pow((fin.y - origen.y),2))
   }
+  
+  def semaforos = _semaforos.getOrElse(ArrayBuffer())
+  
+  def semaforos_= (semaforos: Option[ArrayBuffer[Semaforo]]) = _semaforos = semaforos
   
   override def toString = {s"${tipo.nombre}: $nombre"}
 }
@@ -22,7 +29,7 @@ object Via{
       case n if(velocidadMaxima>120) => 120.0
       case n => velocidadMaxima
     }
-    new Via(origen, fin, velocidad, tipo, sentido, numero, nombre)
+    new Via(origen, fin, velocidad, tipo, sentido, numero, nombre, None)
   }
   
 }
