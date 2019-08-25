@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Double, 
     val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : Option[String], 
-    private var _semaforos: Option[ArrayBuffer[Semaforo]]) extends Recta {
+    private var _semaforos: Option[ArrayBuffer[Semaforo]],_fotomulta:Option[CamaraFotoDeteccion]=None) extends Recta {
   
   type T = Interseccion
   val origen = or

@@ -13,6 +13,8 @@ import com.unalmed.vehTraffic.vehiculo.Placa
 import com.unalmed.vehTraffic.main.Main
 import com.unalmed.vehTraffic.mallaVial.Semaforo
 import com.unalmed.vehTraffic.mallaVial.NodoSemaforo
+import com.unalmed.vehTraffic.mallaVial.CamaraFotoDeteccion
+import com.unalmed.vehTraffic.vehiculo.Comparendo
 
 class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayBuffer[Interseccion])extends Runnable{
   
@@ -67,6 +69,9 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   
   val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
   
+  var listaComparendos:ArrayBuffer[Comparendo]=ArrayBuffer[Comparendo]()
+  //Esa es la lista de comparendos, aun no la he llenado porque no he creado las fotoMultas correspondientes, pero lo dejo aquí para
+  //hacer cálculos con el en ResultadosSimulacion ATT espino 
   
   def run() { //Si requiere usar el método imprimir para verificar los resultados, debe descomentar la función en ResultadosSimulaion
     running = true
