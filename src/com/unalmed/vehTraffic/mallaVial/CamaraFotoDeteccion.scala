@@ -1,14 +1,32 @@
 package com.unalmed.vehTraffic.mallaVial
 import com.unalmed.vehTraffic.vehiculo._
-class CamaraFotoDeteccion(val ubicacion:Double,via:Via,vehiculo:Vehiculo){
-  var angle=via.anguloOrigen
-  var newx=ubicacion*math.cos(angle.valor)
-  var newy=ubicacion*math.sin(angle.valor)
-  def posicion=new Punto(newx,newy)
+import com.unalmed.vehTraffic.simulacion.Simulacion
+
+class CamaraFotoDeteccion(via: Via, longitudRespectoOrigen:Double, ubicacion: Punto){
   
-  def comprobar={
-    if((via.velocidadMaxima-vehiculo.magnitudPublica)<0){
-      new Comparendo(vehiculo,via.velocidadMaxima)
+  def comprobar(vehiculo: Vehiculo, velocidad: Double, simulacion: Simulacion) = {
+    if(velocidad > via.velocidadMaxima){
+      val comparendo = new Comparendo(vehiculo, velocidad, via.velocidadMaxima)
+      simulacion.listaComparendos += comparendo
     }
+  }
+  
+}
+
+object CamaraFotoDeteccion {
+  
+  def apply(via:Via, longitudRespectoOrigen:Double){
+    
+    new CamaraFotoDeteccion(via:Via, longitudRespectoOrigen:Double, calcularUbicacion(via, longitudRespectoOrigen))
+  }
+  
+  
+  
+  def calcularUbicacion(via:Via, longitud:Double) = {
+    val theta = via.anguloOrigen.valor.toRadians
+    val interseccion = via.origen
+    val dy = longitud*Math.sin(theta)
+    val dx = longitud*Math.cos(theta)
+    Punto(interseccion.x+dx,interseccion.y+dy)
   }
 }

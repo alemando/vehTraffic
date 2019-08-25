@@ -15,9 +15,6 @@ extends Movil(_p,_v, _vc, _a) with MovimientoAcelerado {
   private def p_=(p: Punto):Unit= _p=p
   private def v_=(v: Velocidad):Unit= _v=v
   val semaforo = scala.util.Random.nextBoolean()
-  
-  //Esto lo cree para acceder a mi velocidad por parte de la fotoMulta att Espino
-  def magnitudPublica=_v.magnitud
 }
 
 object Vehiculo{

@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Double, 
     val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : Option[String], 
-    private var _semaforos: Option[ArrayBuffer[Semaforo]],_fotomulta:Option[CamaraFotoDeteccion]=None) extends Recta {
+    private var _semaforos: Option[ArrayBuffer[Semaforo]] = None, private var _fotomulta:Option[CamaraFotoDeteccion] = None) extends Recta {
   
   type T = Interseccion
   val origen = or
@@ -29,7 +29,7 @@ object Via{
       case n if(velocidadMaxima>120) => 120.0
       case n => velocidadMaxima
     }
-    new Via(origen, fin, velocidad, tipo, sentido, numero, nombre, None)
+    new Via(origen, fin, velocidad, tipo, sentido, numero, nombre)
   }
   
 }
