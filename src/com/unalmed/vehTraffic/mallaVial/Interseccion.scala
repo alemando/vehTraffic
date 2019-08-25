@@ -1,11 +1,17 @@
 package com.unalmed.vehTraffic.mallaVial
 
-class Interseccion private(val longitud : Double,val latitud : Double, val nombre : Option[String]) extends Punto(longitud,latitud){
+class Interseccion private(val longitud : Double,val latitud : Double, val nombre : Option[String], private var _nodoSemaforo : Option[NodoSemaforo]=None) extends Punto(longitud,latitud){
   
   val color = "#%06x".format(scala.util.Random.nextInt(1<<24))
   
   override def toString ={s"${nombre.getOrElse("Desconocida")}"}
+  
+  def nodoSemaforo = _nodoSemaforo.get
+  
+  def nodoSemaforo_= (nodoSemaforo: Option[NodoSemaforo]) = _nodoSemaforo = nodoSemaforo
+  
 }
+
 
 object Interseccion{
   

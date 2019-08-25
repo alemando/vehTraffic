@@ -13,6 +13,7 @@ import com.unalmed.vehTraffic.vehiculo.Placa
 import com.unalmed.vehTraffic.main.Main
 import com.unalmed.vehTraffic.mallaVial.Semaforo
 import com.unalmed.vehTraffic.mallaVial.NodoSemaforo
+import com.unalmed.vehTraffic.mallaVial.NodoSemaforo
 
 class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayBuffer[Interseccion])extends Runnable{
   
@@ -50,29 +51,39 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   val proporciónBuses: Double = config.parametrosSimulacion.proporciones.buses
   val proporciónCamiones: Double = config.parametrosSimulacion.proporciones.camiones  
   val proporciónMotoTaxis: Double = config.parametrosSimulacion.proporciones.motoTaxis
-  val minAceleracion: Int = 5
-  val maxAceleracion: Int = 20
-  val xSemaforoFrenar: Int = 40
-  val xSemaforoAmarilloContinuar: Int = 20
-  val minTiempoVerde: Int = 20
-  val maxTiempoVerde: Int = 40
-  val tiempoAmarillo: Int = 3
+  val minAceleracion: Int = config.parametrosSimulacion.aceleracion.minimo
+  val maxAceleracion: Int = config.parametrosSimulacion.aceleracion.maximo
+  val xSemaforoFrenar: Int = config.parametrosSimulacion.distanciasFrenadoVehiculos.xSemaforoFrenar
+  val xSemaforoAmarilloContinuar: Int = config.parametrosSimulacion.distanciasFrenadoVehiculos.xSemaforoAmarilloContinuar
+  val minTiempoVerde: Int = config.parametrosSimulacion.semaforos.minTiempoVerde
+  val maxTiempoVerde: Int = config.parametrosSimulacion.semaforos.maxTiempoVerde
+  val tiempoAmarillo: Int = config.parametrosSimulacion.semaforos.tiempoAmarillo
   
-  generarSemaforos()
+  this.generarSemaforos()
   
-  val listaNodosSemaforos = ArrayBuffer(listaVias.map(via => via.semaforos).reduce(_++_).groupBy(_.interseccion).map(ArraySemaforos => new NodoSemaforo(ArraySemaforos._2)).toArray:_*)
   
+  this.agruparSemaforosEnNodos()
+  
+  //Temporal para revisar estado semaforos
+  val nodoSemaforo = listaIntersecciones(0).nodoSemaforo
   
   val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
   
   val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
   
-  
-  def run() { //Si requiere usar el método imprimir para verificar los resultados, debe descomentar la función en ResultadosSimulaion
+  //Si requiere usar el método imprimir para verificar los resultados, debe descomentar la función en ResultadosSimulaion
+  def run() {
     running = true
     while (running) {
       Grafico.graficarVehiculos(listaViajes)
-      listaNodosSemaforos.foreach(_.cambiarEstadoSemaforos(this))
+      
+      //Interseccion(0) es niquia solo tiene dos semaforos
+      //Temporal para ver el cambio de los estados
+      val semaforo1 = nodoSemaforo.semaforos(0)
+      val semaforo2 = nodoSemaforo.semaforos(1)
+      println(nodoSemaforo.estadoDeSemaforo(0, semaforo1, this))
+      println(nodoSemaforo.estadoDeSemaforo(0, semaforo2, this))
+      
       listaViajes.foreach(_.recorrerEnVehiculo(dt))
       t = t + dt
       Thread.sleep(tRefresh)
@@ -95,6 +106,17 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
       }
       
     })
+  }
+  
+  def agruparSemaforosEnNodos() = {
+    val arr = new ArrayBuffer[NodoSemaforo]()
+    val semaforos = ArrayBuffer(listaVias.map(via => via.semaforos).reduce(_++_)).flatten
+    listaIntersecciones.foreach(interseccion=>{
+      val nodoSemaforo = new NodoSemaforo(interseccion, semaforos.filter(_.interseccion == interseccion))
+      arr += nodoSemaforo
+      interseccion.nodoSemaforo =  Option(nodoSemaforo)
+    })
+    arr
   }
   
   def start() = {

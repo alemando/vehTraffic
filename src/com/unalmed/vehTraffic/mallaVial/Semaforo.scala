@@ -3,12 +3,6 @@ package com.unalmed.vehTraffic.mallaVial
 import com.unalmed.vehTraffic.simulacion.Simulacion
 
 class Semaforo(val tiempoVerde: Int, val tiempoAmarillo: Int, val interseccion: Interseccion) {
-  private var _estado:String = _
-  
-  def estado = _estado
-  
-  def estado_= (estado: String) = _estado = estado
-  
   
   def tiempoSemaforo() = {
     tiempoVerde + tiempoAmarillo

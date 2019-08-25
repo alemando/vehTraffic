@@ -14,7 +14,7 @@ case class DistanciasFrenadoVehiculos(private var _xSemaforoFrenar: Int, private
 
   //Setters
   def xSemaforoFrenar_=(xSemaforoFrenar: Int) = _xSemaforoFrenar = xSemaforoFrenar
-  def xSemaforoAmarilloContinuarloContinuar_=(xSemaforoAmarilloContinuar: Int) = _xSemaforoAmarilloContinuar = xSemaforoAmarilloContinuar
+  def xSemaforoAmarilloContinuar_=(xSemaforoAmarilloContinuar: Int) = _xSemaforoAmarilloContinuar = xSemaforoAmarilloContinuar
 
   def getAtributosJson = JField("xSemaforoFrenar", JInt(xSemaforoFrenar)) ::
     JField("xSemaforoAmarilloContinuar", JInt(xSemaforoAmarilloContinuar)) :: Nil
