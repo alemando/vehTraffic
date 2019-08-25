@@ -77,6 +77,14 @@ class ResultadosSimulacion(simulacion:Simulacion) {
   val distanciaPromedio = simulacion.listaViajes.map(_.camino.edges.map(_.label.asInstanceOf[Via].longitud).toList.reduce(_+_)).reduce(_+_)/totalVehiculos
   result.resultadosSimulacion.distancias.promedio=distanciaPromedio
   
+  //Comparendos
+  val cantidadComparendos=simulacion.listaComparendos.size
+  val promedioPorcentajeExceso={
+    var suma=simulacion.listaComparendos.map(_.porcentajeExcedido).reduce(_+_)
+    var pr=suma/cantidadComparendos
+    pr
+  }
+  
 //  Escribir json
   JsonRW.writeResult(result)
   
