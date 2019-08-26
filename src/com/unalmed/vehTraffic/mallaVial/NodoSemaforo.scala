@@ -12,8 +12,8 @@ class NodoSemaforo(val interseccion: Interseccion, val semaforos: ArrayBuffer[Se
    */
   def estadoDeSemaforo(dt:Double, semaforo: Semaforo, simulacion: Simulacion): (String, Double) = {
     var t = {
-      if (dt==simulacion.dt)tiempoEnRango(simulacion.t) + dt
-      else tiempoEnRango(simulacion.t) +simulacion.dt + (simulacion.dt - dt)}
+      if (dt==simulacion.dt)tiempoEnRango(simulacion.t + dt)
+      else tiempoEnRango(simulacion.t +simulacion.dt + (simulacion.dt - dt))}
     var estado: String = ""
     var tiempoHastaSiguenteEstado = 0.0
     semaforos.foreach(semaforoLista => {
@@ -49,7 +49,7 @@ class NodoSemaforo(val interseccion: Interseccion, val semaforos: ArrayBuffer[Se
     semaforos.map(_.tiempoSemaforo()).reduce(_+_)
   }
   
-  def tiempoEnRango(t : Int) = {
+  def tiempoEnRango(t : Double) = {
     val tiempoQueResto = sumaTiempoSemaforos()*Math.floor((t/sumaTiempoSemaforos())).toInt
     t- tiempoQueResto
   }
