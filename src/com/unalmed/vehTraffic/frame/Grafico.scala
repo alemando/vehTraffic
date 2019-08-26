@@ -29,10 +29,13 @@ import com.unalmed.vehTraffic.vehiculo._
 import com.unalmed.vehTraffic.grafo.Viaje
 import com.unalmed.vehTraffic.mallaVial.Via
 import com.unalmed.vehTraffic.mallaVial.Interseccion
+import com.unalmed.vehTraffic.mallaVial.CamaraFotoDeteccion
 
 object Grafico{
   
   val cuadrado = new Rectangle(-4,-4,6,6)
+  
+  val cuadradoFotomulta = new Rectangle(-4,-4,8,8)
   
   val circulo = new Ellipse2D.Double(-4,-4,8,10)
   
@@ -70,18 +73,30 @@ object Grafico{
 	ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
   ventana.addKeyListener(new keyFrame())
   
-	def iniciarGrafico(vias: ArrayBuffer[Via], intersecciones: ArrayBuffer[Interseccion]) = {
+	def iniciarGrafico(vias: ArrayBuffer[Via], intersecciones: ArrayBuffer[Interseccion], camaras: ArrayBuffer[CamaraFotoDeteccion]) = {
     var c: Int = 0
     vias.foreach(v => {
       dataset.addSeries(new XYSeries((c)))
       renderer.setSeriesShapesVisible(c, false)
       c +=1
     })
+    
+    camaras.foreach(camara => { 
+      dataset.addSeries(new XYSeries((c)))
+      val graficoCamara = dataset.getSeries(c)
+      graficoCamara.add(camara.ubicacion.x, camara.ubicacion.y)
+      renderer.setSeriesShape(c, cuadradoFotomulta)
+      renderer.setSeriesPaint(c, Color.decode("#0026ff"))
+    	c +=1
+    })
+    
     intersecciones.foreach(i => { 
       val anotacion: XYTextAnnotation = new XYTextAnnotation(i.nombre.getOrElse("Desconocida"), i.x, i.y)
     	anotacion.setPaint(Color.decode(i.color))
     	plot.addAnnotation(anotacion)
     })
+    
+    
   }
   
   def removerVehiculos(vehiculos: ArrayBuffer[Vehiculo]) = {

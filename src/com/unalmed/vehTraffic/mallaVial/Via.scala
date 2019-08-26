@@ -2,7 +2,7 @@ package com.unalmed.vehTraffic.mallaVial
 
 import scala.collection.mutable.ArrayBuffer
 
-class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMaxima : Double, 
+case class Via private(val or : Interseccion, val fn : Interseccion)( val velocidadMaxima : Double, 
     val tipo : TipoVia, val sentido : Sentido, val numero : String, val nombre : Option[String], private var _fotomulta:Option[CamaraFotoDeteccion] = None) extends Recta {
   
   type T = Interseccion
@@ -14,6 +14,11 @@ class Via private(val or : Interseccion, val fn : Interseccion, val velocidadMax
   }
   
   override def toString = {s"${tipo.nombre}: $nombre"}
+  
+  //Revisar getOrELse
+   def fotomulta = _fotomulta.get
+  
+   def fotomulta_= (fotomulta: Option[CamaraFotoDeteccion]) = _fotomulta = fotomulta
 }
 
 object Via{
@@ -24,7 +29,7 @@ object Via{
       case n if(velocidadMaxima>120) => 120.0
       case n => velocidadMaxima
     }
-    new Via(origen, fin, velocidad, tipo, sentido, numero, nombre)
+    new Via(origen, fin)( velocidad, tipo, sentido, numero, nombre)
   }
   
 }
