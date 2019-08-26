@@ -5,46 +5,30 @@ import com.unalmed.vehTraffic.dimension.Velocidad
 
 trait MovimientoAcelerado extends MovimientoUniforme{
   
-  
-  def aplicarAceleracion (t: Double):Unit = {
-    val theta = velocidad.direccion.valor.toRadians
-    val v0 = Velocidad.kilometroAmetro(velocidad.magnitud)
-    val dy = v0*t*Math.sin(theta)+(aceleracion*Math.sin(theta)*t*t)/2.0
-    val dx = v0*t*Math.cos(theta)+(aceleracion*Math.cos(theta)*t*t)/2.0
-    aumentarVelocidad(t)
-    posicion=Punto(posicion.x+dx,posicion.y+dy)
-  }
-  
-  def aplicarDesaceleracion (t: Double, a: Double):Unit = {
+  def aplicarAceleracion (t: Double, a: Double=aceleracion):Unit = {
     val theta = velocidad.direccion.valor.toRadians
     val v0 = Velocidad.kilometroAmetro(velocidad.magnitud)
     val dy = v0*t*Math.sin(theta)+(a*Math.sin(theta)*t*t)/2.0
     val dx = v0*t*Math.cos(theta)+(a*Math.cos(theta)*t*t)/2.0
-    disminuirVelocidad(t,a)
+    cambiarVelocidad(t,a)
     posicion=Punto(posicion.x+dx,posicion.y+dy)
   }
   
-  def disminuirVelocidad(t:Double, a:Double):Unit = {
+  def cambiarVelocidad(t:Double, a:Double=aceleracion):Unit = {
     val v0 = Velocidad.kilometroAmetro(velocidad.magnitud)
     val dv = Velocidad.metroAkilometro(v0 + a*t)
     velocidad = Velocidad(if (dv>=0) dv else 0)(velocidad.direccion)
   }
   
-  def aumentarVelocidad(t: Double):Unit = {
+  def tiempoParaVelocidad(vel:Double, a:Double=aceleracion):Double={
     val v0 = Velocidad.kilometroAmetro(velocidad.magnitud)
-    val dv = Velocidad.metroAkilometro(v0 + aceleracion*t)
-    velocidad = Velocidad(if (dv>=0) dv else 0)(velocidad.direccion)
-  }
-  
-  def tiempoMaximaVelocidad(vel:Double):Double={
-    val v0 = Velocidad.kilometroAmetro(velocidad.magnitud)
-    val dt = (vel-v0)/aceleracion
+    val dt = (vel-v0)/a
     dt
   }
   
-  def velocidadEnDistancia(d:Double):Double={
+  def velocidadEnDistancia(d:Double, a:Double=aceleracion):Double={
     val v0 = Velocidad.kilometroAmetro(velocidad.magnitud)
-    val v = Math.sqrt(Math.pow(v0, 2)+2*aceleracion*d)
+    val v = Math.sqrt(Math.pow(v0, 2)+2*a*d)
     v
   }
     

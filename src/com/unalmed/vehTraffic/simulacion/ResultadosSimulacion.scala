@@ -78,12 +78,12 @@ class ResultadosSimulacion(simulacion:Simulacion) {
   result.resultadosSimulacion.distancias.promedio=distanciaPromedio
   
   //Comparendos
-  val cantidadComparendos=simulacion.listaComparendos.size
-  val promedioPorcentajeExceso={
-    var suma=simulacion.listaComparendos.map(_.porcentajeExcedido).reduce(_+_)
-    var pr=suma/cantidadComparendos
-    pr
-  }
+//  val cantidadComparendos=simulacion.listaComparendos.size
+//  val promedioPorcentajeExceso={
+//    var suma=simulacion.listaComparendos.map(_.porcentajeExcedido).reduce(_+_)
+//    var pr=suma/cantidadComparendos
+//    pr
+//  }
   
 //  Escribir json
   JsonRW.writeResult(result)

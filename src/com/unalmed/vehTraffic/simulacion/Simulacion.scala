@@ -60,10 +60,9 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   val maxTiempoVerde: Int = config.parametrosSimulacion.semaforos.maxTiempoVerde
   val tiempoAmarillo: Int = config.parametrosSimulacion.semaforos.tiempoAmarillo
   
-  this.generarSemaforos()
   
-  
-  this.agruparSemaforosEnNodos()
+  val listaSemaforos: ArrayBuffer[Semaforo] = Semaforo.llenarSemaforos(listaVias, minTiempoVerde, maxTiempoVerde, tiempoAmarillo)
+  NodoSemaforo.crearNodos(listaSemaforos, listaIntersecciones)
   
   //Temporal para revisar estado semaforos
   val nodoSemaforo = listaIntersecciones(0).nodoSemaforo
@@ -86,8 +85,8 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
       //Temporal para ver el cambio de los estados
       val semaforo1 = nodoSemaforo.semaforos(0)
       val semaforo2 = nodoSemaforo.semaforos(1)
-      println(nodoSemaforo.estadoDeSemaforo(0, semaforo1, this))
-      println(nodoSemaforo.estadoDeSemaforo(0, semaforo2, this))
+//      println(nodoSemaforo.estadoDeSemaforo(0, semaforo1, this))
+//      println(nodoSemaforo.estadoDeSemaforo(0, semaforo2, this))
       
       listaViajes.foreach(_.recorrerEnVehiculo(dt))
       t = t + dt
@@ -100,28 +99,6 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
         println("Se acabó")
       }
     }
-  }
-  
-  def generarSemaforos() = {
-    listaVias.foreach(via=>{
-      if(via.sentido.nombre == "unaVia"){ 
-        via.semaforos = Option(ArrayBuffer(Semaforo(this, via.origen))) 
-      }else{
-        via.semaforos = Option(ArrayBuffer(Semaforo(this, via.origen),Semaforo(this, via.fin))) 
-      }
-      
-    })
-  }
-  
-  def agruparSemaforosEnNodos() = {
-    val arr = new ArrayBuffer[NodoSemaforo]()
-    val semaforos = ArrayBuffer(listaVias.map(via => via.semaforos).reduce(_++_)).flatten
-    listaIntersecciones.foreach(interseccion=>{
-      val nodoSemaforo = new NodoSemaforo(interseccion, semaforos.filter(_.interseccion == interseccion))
-      arr += nodoSemaforo
-      interseccion.nodoSemaforo =  Option(nodoSemaforo)
-    })
-    arr
   }
   
   def start() = {

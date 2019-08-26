@@ -10,10 +10,12 @@ class NodoSemaforo(val interseccion: Interseccion, val semaforos: ArrayBuffer[Se
    * y su simulacion, obtengo el estado actual del semaforo en el tiempo global de la simulacion
    * y el tiempo para su proximo cambio de estado
    */
-  def estadoDeSemaforo(dt:Int, semaforo: Semaforo, simulacion: Simulacion): (String, Int) = {
-    var t = tiempoEnRango(simulacion.t) + dt
+  def estadoDeSemaforo(dt:Double, semaforo: Semaforo, simulacion: Simulacion): (String, Double) = {
+    var t = {
+      if (dt==simulacion.dt)tiempoEnRango(simulacion.t) + dt
+      else tiempoEnRango(simulacion.t) +simulacion.dt + (simulacion.dt - dt)}
     var estado: String = ""
-    var tiempoHastaSiguenteEstado = 0
+    var tiempoHastaSiguenteEstado = 0.0
     semaforos.foreach(semaforoLista => {
       if(semaforoLista == semaforo){
         if(t<0){
@@ -51,4 +53,21 @@ class NodoSemaforo(val interseccion: Interseccion, val semaforos: ArrayBuffer[Se
     val tiempoQueResto = sumaTiempoSemaforos()*Math.floor((t/sumaTiempoSemaforos())).toInt
     t- tiempoQueResto
   }
+  
+  def semaforoEnVia(via: Via):Semaforo={
+    semaforos.filter(_.via==via)(0)
+  }
+}
+
+object NodoSemaforo{
+  
+  def crearNodos(semaforos: ArrayBuffer[Semaforo], intersecciones: ArrayBuffer[Interseccion]):Unit={
+    val arr = new ArrayBuffer[NodoSemaforo]()
+    intersecciones.foreach(interseccion=>{
+      val nodoSemaforo = new NodoSemaforo(interseccion, semaforos.filter(_.interseccion == interseccion))
+      arr += nodoSemaforo
+      interseccion.nodoSemaforo =  Option(nodoSemaforo)
+    })
+  }
+  
 }
