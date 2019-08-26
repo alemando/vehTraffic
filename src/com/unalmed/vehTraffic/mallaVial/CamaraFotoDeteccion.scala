@@ -2,7 +2,7 @@ package com.unalmed.vehTraffic.mallaVial
 import com.unalmed.vehTraffic.vehiculo._
 import com.unalmed.vehTraffic.simulacion.Simulacion
 
-class CamaraFotoDeteccion(via: Via, longitudRespectoOrigen:Double, ubicacion: Punto){
+class CamaraFotoDeteccion private(val via: Via, longitudRespectoOrigen:Double,val ubicacion: Punto){
   
   def comprobar(vehiculo: Vehiculo, velocidad: Double, simulacion: Simulacion) = {
     if(velocidad > via.velocidadMaxima){
@@ -15,11 +15,9 @@ class CamaraFotoDeteccion(via: Via, longitudRespectoOrigen:Double, ubicacion: Pu
 
 object CamaraFotoDeteccion {
   
-  def apply(via:Via, longitudRespectoOrigen:Double){
-    
-    new CamaraFotoDeteccion(via:Via, longitudRespectoOrigen:Double, calcularUbicacion(via, longitudRespectoOrigen))
+  def apply(via:Via, longitudRespectoOrigen:Double) = {
+    new  CamaraFotoDeteccion(via:Via, longitudRespectoOrigen:Double, calcularUbicacion(via, longitudRespectoOrigen))
   }
-  
   
   
   def calcularUbicacion(via:Via, longitud:Double) = {
