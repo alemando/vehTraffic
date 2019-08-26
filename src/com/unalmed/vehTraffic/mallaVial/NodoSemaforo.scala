@@ -10,10 +10,10 @@ class NodoSemaforo(val interseccion: Interseccion, val semaforos: ArrayBuffer[Se
    * y su simulacion, obtengo el estado actual del semaforo en el tiempo global de la simulacion
    * y el tiempo para su proximo cambio de estado
    */
-  def estadoDeSemaforo(dt:Double, semaforo: Semaforo, simulacion: Simulacion): (String, Double) = {
+  def estadoDeSemaforo(dt:Double, semaforo: Semaforo, dtSimulacion:Double, tSimulacion:Double): (String, Double) = {
     var t = {
-      if (dt==simulacion.dt)tiempoEnRango(simulacion.t + dt)
-      else tiempoEnRango(simulacion.t +simulacion.dt + (simulacion.dt - dt))}
+      if (dt==dtSimulacion)tiempoEnRango(tSimulacion + dt)
+      else tiempoEnRango(tSimulacion + dtSimulacion + (dtSimulacion - dt))}
     var estado: String = ""
     var tiempoHastaSiguenteEstado = 0.0
     semaforos.foreach(semaforoLista => {

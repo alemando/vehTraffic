@@ -6,10 +6,10 @@ import com.unalmed.vehTraffic.simulacion.Simulacion
 import com.unalmed.vehTraffic.dimension._
 import scala.collection.mutable.{Queue,ArrayBuffer}
 
-class Viaje private (val origen: Interseccion, val destino: Interseccion, val camino: GrafoVia.grafo.Path ,val ruta: Queue[Via], val intersecciones: Queue[Interseccion])(simulacion:Simulacion){
-  val vehiculo = Vehiculo(simulacion,this)
+class Viaje private (val vehiculo: Vehiculo, val origen: Interseccion, val destino: Interseccion, val camino: GrafoVia.grafo.Path ,
+    val ruta: Queue[Via], val intersecciones: Queue[Interseccion]){
   
-  def recorrerEnVehiculo(dt : Double):Unit = {
+	def recorrerEnVehiculo(dt : Double, dtSimulacion: Double, tSimulacion: Double, xSemaforoFrenar: Int, xSemaforoAmarilloContinuar:Int):Unit = {
     
     def definirAngulo(interseccion: Interseccion, via: Via):Angulo= if (via.origen == interseccion) via.anguloOrigen else via.anguloDestino
 
@@ -30,11 +30,11 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
 //        println("Origen")
           val interseccionActual = intersecciones.dequeue()
           vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, viaActual))
-          recorrerEnVehiculo(dt)
+          recorrerEnVehiculo(dt, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
       }
       else{
       val semaforo = interseccionSiguiente.nodoSemaforo.semaforoEnVia(viaActual)
-      val (estadoSemaforo, tiempoProximoCambioSemaforo) = interseccionSiguiente.nodoSemaforo.estadoDeSemaforo(dt, semaforo, simulacion)
+      val (estadoSemaforo, tiempoProximoCambioSemaforo) = interseccionSiguiente.nodoSemaforo.estadoDeSemaforo(dt, semaforo, dtSimulacion, tSimulacion)
 //      println("\n")
 //      println(s"Movimiento hacia $interseccionSiguiente por $viaActual\n")
 //      println(s"dt: $dt")
@@ -55,7 +55,7 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
           if(interseccionSiguiente==origen){
             val interseccionActual = intersecciones.dequeue()
             vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, viaActual))
-            recorrerEnVehiculo(dt)
+            recorrerEnVehiculo(dt, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
         //Termina recorrido
           else if(interseccionSiguiente==destino){
@@ -69,17 +69,17 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
           val interseccionActual = intersecciones.dequeue()
           val viaPasada = ruta.dequeue()
           vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, ruta.head))
-          recorrerEnVehiculo(dt)
+          recorrerEnVehiculo(dt, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
           else{
 //          println("Esperando rojo")
             if(dt>tiempoProximoCambioSemaforo){
-            recorrerEnVehiculo(dt-tiempoProximoCambioSemaforo)
+            recorrerEnVehiculo(dt-tiempoProximoCambioSemaforo, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
         }
       }
       //Si estoy en la zona roja
-      else if(distanciaCarroAInterseccion<= simulacion.xSemaforoFrenar){
+      else if(distanciaCarroAInterseccion<= xSemaforoFrenar){
         if(estadoSemaforo=="Rojo"){
 //          println("Zona roja, rojo")
           val(desaceleracion,tiempoFrenado)= vehiculo.parametrosFrenadoEnDistancia(distanciaCarroAInterseccion)
@@ -98,11 +98,11 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
             vehiculo.aplicarAceleracion(tiempoProximoCambioSemaforo,desaceleracion)
 //            println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
             if(tiempoFrenado==tiempoComparacion) vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-            if(dt>tiempoComparacion)recorrerEnVehiculo(dt-tiempoComparacion)
+            if(dt>tiempoComparacion)recorrerEnVehiculo(dt-tiempoComparacion,dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
         }
         //Si estoy en la zona roja pero estoy en verde o en amarillo y en la zona amarillo
-        else if(estadoSemaforo=="Verde" || (estadoSemaforo=="Amarillo" && distanciaCarroAInterseccion <= simulacion.xSemaforoAmarilloContinuar)){
+        else if(estadoSemaforo=="Verde" || (estadoSemaforo=="Amarillo" && distanciaCarroAInterseccion <= xSemaforoAmarilloContinuar)){
 //          println("Zona roja pero semáforo no rojo")
           //Calculo la máxima distancia
         val (distanciaAceleracion, distanciaCrucero,tiempoAceleracion, tiempoCrucero): (Double,Double,Double,Double) = {
@@ -149,13 +149,13 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
             }
             //El tiempo restante lo aplico en la intersección
             vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-            if (tiempoRestante>0) recorrerEnVehiculo(tiempoRestante)
+            if (tiempoRestante>0) recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
         }
         //Amarillo y frenar
         else{
 //          println("Amarillo y freno")
-          val distanciaAZonaAmarillo = if(distanciaCarroAInterseccion-simulacion.xSemaforoAmarilloContinuar<0.05)0.05 else distanciaCarroAInterseccion-simulacion.xSemaforoAmarilloContinuar
+          val distanciaAZonaAmarillo = if(distanciaCarroAInterseccion-xSemaforoAmarilloContinuar<0.05)0.05 else distanciaCarroAInterseccion-xSemaforoAmarilloContinuar
           val(desaceleracion,tiempoFrenado)= vehiculo.parametrosFrenadoEnDistancia(distanciaCarroAInterseccion)
           val tiempoAZonaAmarillo = vehiculo.tiempoParaVelocidad(vehiculo.velocidadEnDistancia(distanciaAZonaAmarillo, desaceleracion), desaceleracion)
           val tiempoComparacion = if (tiempoAZonaAmarillo<tiempoProximoCambioSemaforo)tiempoAZonaAmarillo else tiempoProximoCambioSemaforo
@@ -169,7 +169,7 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
 //            println("Si llego a amarillo")
             vehiculo.aplicarAceleracion(tiempoAZonaAmarillo,desaceleracion)
 //            if(tiempoFrenado==tiempoComparacion) vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-            if (dt>tiempoComparacion) recorrerEnVehiculo(dt-tiempoComparacion)
+            if (dt>tiempoComparacion) recorrerEnVehiculo(dt-tiempoComparacion,dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
         }
       }
@@ -190,7 +190,7 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
         }
         val maximaDistancia = distanciaAceleracion + distanciaCrucero
         //Si la distancia máxima no sobrepasa a la zona de frenado
-        if (maximaDistancia<distanciaCarroAInterseccion-simulacion.xSemaforoFrenar){
+        if (maximaDistancia<distanciaCarroAInterseccion-xSemaforoFrenar){
 //          println("No llego a zona roja")
           //Aplico aceleración solo si hay tiempo de aceleracion
           if(tiempoAceleracion!=0)vehiculo.aplicarAceleracion(tiempoAceleracion)
@@ -200,7 +200,7 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
         //Si la máxima distancia sobrepasa a la zona de frenado
         else /*if(maximaDistancia>=distanciaCarroAInterseccion-simulacion.xSemaforoFrenar)*/{
 //          println("Llego a zona roja")
-          val distanciaRojo:Double ={ if(distanciaCarroAInterseccion-simulacion.xSemaforoFrenar<0.05)0.05 else distanciaCarroAInterseccion-simulacion.xSemaforoFrenar}
+          val distanciaRojo:Double ={ if(distanciaCarroAInterseccion-xSemaforoFrenar<0.05)0.05 else distanciaCarroAInterseccion-xSemaforoFrenar}
           //Encuentro el tiempo sobrante luego de aplicar 
           val tiempoRestante:Double ={
             //Aplico aceleración hasta llegar al límite de zona de frenado
@@ -226,7 +226,7 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
             }
           //El tiempo restante lo aplico en la zona de frenado
 //          println(s"Tiempo restante: $tiempoRestante")
-          if(tiempoRestante>0)recorrerEnVehiculo(tiempoRestante)
+          if(tiempoRestante>0)recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
             }
         }
       }
@@ -242,12 +242,12 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
 
 
 object Viaje{
-  def apply(simulacion: Simulacion): Viaje={
-    val random1=scala.util.Random.nextInt(simulacion.listaIntersecciones.length)
-    var random2=scala.util.Random.nextInt(simulacion.listaIntersecciones.length)
-    while(random1 == random2) random2=scala.util.Random.nextInt(simulacion.listaIntersecciones.length)
-    val origen = simulacion.listaIntersecciones(random1)
-    val destino = simulacion.listaIntersecciones(random2)
+  def apply(vehiculo: Vehiculo, listaIntersecciones: ArrayBuffer[Interseccion]): Viaje={
+    val random1=scala.util.Random.nextInt(listaIntersecciones.length)
+    var random2=scala.util.Random.nextInt(listaIntersecciones.length)
+    while(random1 == random2) random2=scala.util.Random.nextInt(listaIntersecciones.length)
+    val origen = listaIntersecciones(random1)
+    val destino = listaIntersecciones(random2)
 //    val origen = {val l=simulacion.listaIntersecciones.filter(_.nombre==Some("Juan 65"))
 //      l(0)}
 //    val destino ={val l=simulacion.listaIntersecciones.filter(_.nombre==Some("Boliv con 65"))
@@ -255,14 +255,20 @@ object Viaje{
     val camino = GrafoVia.camino(origen, destino)
     val ruta: Queue[Via] = Queue(camino.get.edges.map(_.label.asInstanceOf[Via]).toList: _*)
     val intersecciones: Queue[Interseccion] = Queue(camino.get.nodes.map(_.value.asInstanceOf[Interseccion]).toList: _*)
-    new Viaje(origen, destino, camino.get ,ruta, intersecciones)(simulacion)
+    new Viaje(vehiculo, origen, destino, camino.get ,ruta, intersecciones)
   }
   
-    def llenarViajes(simulacion: Simulacion): ArrayBuffer[Viaje]={
-      val minimo = simulacion.minVehiculos
-      val maximo = simulacion.maxVehiculos
-    val cantidad = minimo + {scala.util.Random.nextInt(maximo+1 -minimo)}
-    val todos = ArrayBuffer.fill(cantidad)(Viaje(simulacion))
+    def llenarViajes(vehiculos: ArrayBuffer[Vehiculo], intersecciones: ArrayBuffer[Interseccion]): ArrayBuffer[Viaje]={
+    val todos:ArrayBuffer[Viaje] = ArrayBuffer()
+    vehiculos.foreach(vehiculo =>{
+      val viaje = Viaje(vehiculo,intersecciones)
+      val nodo = viaje.intersecciones.head
+      vehiculo.posicion=nodo
+      val angulo = {if (nodo == viaje.ruta.head.origen)viaje.ruta.head.anguloOrigen
+                  else viaje.ruta.head.anguloDestino}
+      vehiculo.velocidad=Velocidad(0.0)(angulo)
+      todos+=viaje
+    })
     todos
   }
   

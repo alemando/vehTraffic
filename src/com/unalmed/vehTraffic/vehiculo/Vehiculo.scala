@@ -19,36 +19,36 @@ extends Movil(_p,_v, _vc, _a) with MovimientoAcelerado {
 
 object Vehiculo{
   
-  def apply(simulacion: Simulacion, viaje: Viaje): Vehiculo={
+  def apply(minVelocidad:Int, maxVelocidad:Int, minAceleracion: Int, maxAceleracion:Int, proporciones:ArrayBuffer[Double]): Vehiculo={
     val r= scala.util.Random.nextFloat()
-    val probCarros = simulacion.proporciónCarros
-    val probMotos = probCarros + simulacion.proporciónMotos
-    val probBuses = probMotos + simulacion.proporciónBuses
-    val probCamiones = probBuses + simulacion.proporciónCamiones
-    val probMotoTaxi = probCamiones + simulacion.proporciónMotoTaxis
-    val velocidad = simulacion.minVelocidad + scala.util.Random.nextInt({simulacion.maxVelocidad + 1 - simulacion.minVelocidad})
-    val aceleracion = simulacion.minAceleracion + scala.util.Random.nextInt(simulacion.maxAceleracion + 1 - simulacion.minAceleracion)
-    val nodo = viaje.intersecciones.head
-    val angulo = {if (nodo == viaje.ruta.head.origen)viaje.ruta.head.anguloOrigen
-                  else viaje.ruta.head.anguloDestino}
-    if (r>=0 && r<=probCarros)
+//    val probCarros = simulacion.proporciónCarros
+//    val probMotos = probCarros + simulacion.proporciónMotos
+//    val probBuses = probMotos + simulacion.proporciónBuses
+//    val probCamiones = probBuses + simulacion.proporciónCamiones
+//    val probMotoTaxi = probCamiones + simulacion.proporciónMotoTaxis
+    val velocidad = minVelocidad + scala.util.Random.nextInt({maxVelocidad + 1 - minVelocidad})
+    val aceleracion = minAceleracion + scala.util.Random.nextInt(maxAceleracion + 1 - minAceleracion)
+    val nodo = Punto(0.0,0.0)/*viaje.intersecciones.head*/
+    val angulo = Angulo(0.0)/*{if (nodo == viaje.ruta.head.origen)viaje.ruta.head.anguloOrigen
+                  else viaje.ruta.head.anguloDestino}*/
+    if (r>=proporciones(0) && r<=proporciones(1))
       return Carro(nodo, Velocidad(0, angulo), velocidad, aceleracion)
-    else if(r>probCarros && r<=probMotos)
+    else if(r>proporciones(1) && r<=proporciones(2))
       return Moto(nodo, Velocidad(0, angulo), velocidad, aceleracion)
-    else if(r>probMotos && r<=probBuses)
+    else if(r>proporciones(2) && r<=proporciones(3))
       return Bus(nodo, Velocidad(0, angulo), velocidad, aceleracion)
-    else if(r>probBuses && r<=probCamiones)
+    else if(r>proporciones(3) && r<=proporciones(4))
       return Camion(nodo, Velocidad(0, angulo), velocidad, aceleracion)
     else
       return MotoTaxi(nodo, Velocidad(0, angulo), velocidad, aceleracion)
   }
-  /*
-  def llenarVehiculos(simulacion: Simulacion): ArrayBuffer[Viaje]={
-      val minimo = simulacion.minVehiculos
-      val maximo = simulacion.maxVehiculos
+  
+  def llenarVehiculos(minVehiculos:Int, maxVehiculos:Int, minVelocidad:Int, maxVelocidad:Int, minAceleracion: Int, maxAceleracion:Int, proporciones:ArrayBuffer[Double]): ArrayBuffer[Vehiculo]={
+      val minimo = minVehiculos
+      val maximo = maxVehiculos
     val cantidad = minimo + {scala.util.Random.nextInt(maximo+1 -minimo)}
-    val vehiculos = ArrayBuffer.fill(cantidad)(Vehiculo(simulacion))
+    val vehiculos = ArrayBuffer.fill(cantidad)(Vehiculo(minVelocidad, maxVelocidad, minAceleracion, maxAceleracion, proporciones))
     vehiculos
-  }*/
+  }
   
 }

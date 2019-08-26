@@ -62,13 +62,24 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   val maxTiempoVerde: Int = config.parametrosSimulacion.semaforos.maxTiempoVerde
   val tiempoAmarillo: Int = config.parametrosSimulacion.semaforos.tiempoAmarillo
   
+  val proporciones=Array(0.0,proporciónCarros, proporciónMotos, proporciónBuses, proporciónCamiones, proporciónMotoTaxis)
+  
+  val proporcionesSumadas:ArrayBuffer[Double]={
+    var sum = 0.0
+    val prop: ArrayBuffer[Double]= ArrayBuffer()
+    proporciones.foreach(x => {sum += x
+                                prop+=sum})
+    prop
+  }
   
   val listaSemaforos: ArrayBuffer[Semaforo] = Semaforo.llenarSemaforos(listaVias, minTiempoVerde, maxTiempoVerde, tiempoAmarillo)
   NodoSemaforo.crearNodos(listaSemaforos, listaIntersecciones)
   
-  val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(this)
+  val listaVehiculos: ArrayBuffer[Vehiculo] = Vehiculo.llenarVehiculos(minVehiculos, maxVehiculos, minVelocidad, maxVelocidad, minAceleracion, maxAceleracion, proporcionesSumadas)
   
-  val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
+  val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(listaVehiculos, listaIntersecciones)
+  
+//  val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
   
   val listaComparendos:ArrayBuffer[Comparendo]=ArrayBuffer[Comparendo]()
   //Esa es la lista de comparendos, aun no la he llenado porque no he creado las fotoMultas correspondientes, pero lo dejo aquí para
@@ -79,7 +90,7 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
     running = true
     while (running) {
       Grafico.graficarVehiculos(listaViajes)
-      listaViajes.foreach(_.recorrerEnVehiculo(dt))
+      listaViajes.foreach(_.recorrerEnVehiculo(dt,dt,t,xSemaforoFrenar, xSemaforoAmarilloContinuar))
       t = t + dt
       Thread.sleep(tRefresh)
 //      if (listaVehiculos.filter(x => x.viaje.destino == x.posicion).length == listaVehiculos.length){
