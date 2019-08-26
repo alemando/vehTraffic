@@ -17,7 +17,7 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
       
       val interseccionSiguiente = intersecciones.head
       val viaActual = ruta.head
-      println("\n")
+//      println("\n")
 //      println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
 //      if (vehiculo.posicion.x.isNaN()){
 //      println(camino)
@@ -27,7 +27,7 @@ class Viaje private (val origen: Interseccion, val destino: Interseccion, val ca
       val distanciaCarroAInterseccion = vehiculo.posicion.longitudEntrePunto(interseccionSiguiente)
       val crucero = if(Velocidad.kilometroAmetro(vehiculo.velocidad.magnitud) >= vehiculo.velocidadCrucero) true else false
       if(interseccionSiguiente==origen){
-        println("Origen")
+//        println("Origen")
           val interseccionActual = intersecciones.dequeue()
           vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, viaActual))
           recorrerEnVehiculo(dt)
@@ -258,7 +258,9 @@ object Viaje{
     new Viaje(origen, destino, camino.get ,ruta, intersecciones)(simulacion)
   }
   
-    def llenarViajes(minimo: Int, maximo: Int, simulacion: Simulacion): ArrayBuffer[Viaje]={
+    def llenarViajes(simulacion: Simulacion): ArrayBuffer[Viaje]={
+      val minimo = simulacion.minVehiculos
+      val maximo = simulacion.maxVehiculos
     val cantidad = minimo + {scala.util.Random.nextInt(maximo+1 -minimo)}
     val todos = ArrayBuffer.fill(cantidad)(Viaje(simulacion))
     todos

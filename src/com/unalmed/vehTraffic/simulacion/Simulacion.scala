@@ -16,7 +16,8 @@ import com.unalmed.vehTraffic.mallaVial.NodoSemaforo
 import com.unalmed.vehTraffic.mallaVial.CamaraFotoDeteccion
 import com.unalmed.vehTraffic.vehiculo.Comparendo
 
-class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayBuffer[Interseccion])extends Runnable{
+class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayBuffer[Interseccion], 
+    val listaCamaraFotoDeteccion: ArrayBuffer[CamaraFotoDeteccion])extends Runnable{
   
   var _hilo: Thread = _
   
@@ -34,9 +35,10 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   def t: Int = _t
   
   private def t_=(t: Int):Unit= _t=t
+  
   GrafoVia.construir(listaVias)
   
-  Grafico.graficarVias(listaVias)  
+  
   
   //Leer archivo json (crea objeto con todos los valores en una variable (config) de la clase JsonRW)
   val config = JsonRW.readConfig()
@@ -64,14 +66,11 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
   val listaSemaforos: ArrayBuffer[Semaforo] = Semaforo.llenarSemaforos(listaVias, minTiempoVerde, maxTiempoVerde, tiempoAmarillo)
   NodoSemaforo.crearNodos(listaSemaforos, listaIntersecciones)
   
-  //Temporal para revisar estado semaforos
-  val nodoSemaforo = listaIntersecciones(0).nodoSemaforo
-  
-  val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(minVehiculos, maxVehiculos, this)
+  val listaViajes: ArrayBuffer[Viaje] = Viaje.llenarViajes(this)
   
   val listaVehiculos: ArrayBuffer[Vehiculo] = listaViajes.map(_.vehiculo)
   
-  var listaComparendos:ArrayBuffer[Comparendo]=ArrayBuffer[Comparendo]()
+  val listaComparendos:ArrayBuffer[Comparendo]=ArrayBuffer[Comparendo]()
   //Esa es la lista de comparendos, aun no la he llenado porque no he creado las fotoMultas correspondientes, pero lo dejo aquí para
   //hacer cálculos con el en ResultadosSimulacion ATT espino 
 
@@ -80,14 +79,6 @@ class Simulacion(val listaVias: ArrayBuffer[Via],val listaIntersecciones: ArrayB
     running = true
     while (running) {
       Grafico.graficarVehiculos(listaViajes)
-      
-      //Interseccion(0) es niquia solo tiene dos semaforos
-      //Temporal para ver el cambio de los estados
-      val semaforo1 = nodoSemaforo.semaforos(0)
-      val semaforo2 = nodoSemaforo.semaforos(1)
-//      println(nodoSemaforo.estadoDeSemaforo(0, semaforo1, this))
-//      println(nodoSemaforo.estadoDeSemaforo(0, semaforo2, this))
-      
       listaViajes.foreach(_.recorrerEnVehiculo(dt))
       t = t + dt
       Thread.sleep(tRefresh)

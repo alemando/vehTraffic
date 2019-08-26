@@ -14,7 +14,7 @@ extends Movil(_p,_v, _vc, _a) with MovimientoAcelerado {
   private def v: Velocidad=_v
   private def p_=(p: Punto):Unit= _p=p
   private def v_=(v: Velocidad):Unit= _v=v
-  val semaforo = scala.util.Random.nextBoolean()
+  
 }
 
 object Vehiculo{
@@ -42,5 +42,13 @@ object Vehiculo{
     else
       return MotoTaxi(nodo, Velocidad(0, angulo), velocidad, aceleracion)
   }
+  /*
+  def llenarVehiculos(simulacion: Simulacion): ArrayBuffer[Viaje]={
+      val minimo = simulacion.minVehiculos
+      val maximo = simulacion.maxVehiculos
+    val cantidad = minimo + {scala.util.Random.nextInt(maximo+1 -minimo)}
+    val vehiculos = ArrayBuffer.fill(cantidad)(Vehiculo(simulacion))
+    vehiculos
+  }*/
   
 }

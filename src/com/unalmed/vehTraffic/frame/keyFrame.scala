@@ -10,12 +10,12 @@ class keyFrame extends KeyListener{
     //f1
     if(event.getKeyCode == 112) {
       if (Main.objectSimulacion != null) Main.stop()
-      Main.start()
+      Main.reconstruir()
     }
     //f2
     if(event.getKeyCode == 113) {
       if (Main.objectSimulacion != null) Main.stop()
-      Main.start()
+      Main.guardar()
     }
     //f5
     if(event.getKeyCode == 116) {

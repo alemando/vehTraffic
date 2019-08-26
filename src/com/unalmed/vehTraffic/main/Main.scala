@@ -15,19 +15,29 @@ object Main extends App{
   
   Grafico.iniciarGrafico(listaVias, listaIntersecciones, listaCamaraFotoDeteccion)
   
-  var objectSimulacion: Simulacion = new Simulacion(listaVias, listaIntersecciones)
+  Grafico.graficarVias(listaVias)
+  
+  var objectSimulacion: Simulacion = _
   
   def start() = {
     while(Thread.activeCount()>3){
       Thread.sleep(100)
     }
     if (objectSimulacion != null) objectSimulacion.borrar
-    objectSimulacion = new Simulacion(listaVias, listaIntersecciones)
+    objectSimulacion = new Simulacion(listaVias, listaIntersecciones, listaCamaraFotoDeteccion)
     objectSimulacion.start()
     
   }
   
   def stop() = {
+    objectSimulacion.stop()
+  }
+  
+  def guardar() = {
+    objectSimulacion.stop()
+  }
+  
+  def reconstruir(){
     objectSimulacion.stop()
   }
   
