@@ -112,14 +112,14 @@ object Vehiculo{
       return MotoTaxi(nodo, Velocidad(0, angulo), 0.0, velocidad, tazaAceleracion)
   }
   
-  def apply(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double, tipo:String): Vehiculo = {
+  def apply(placa : String, posicion : Punto, velocidad: Velocidad, aceleracion : Double, velocidadCrucero: Double, tazaAceleracion: Double, tipo:String): Vehiculo = {
      
     tipo match{
-      case "Carro" => Carro(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
-      case "Camion" => Camion(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
-      case "Bus" => Bus(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
-      case "Moto" => Moto(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
-      case "MotoTaxi" => MotoTaxi(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
+      case "Carro" => Carro(placa, posicion, velocidad, aceleracion, velocidadCrucero, tazaAceleracion)
+      case "Camion" => Camion(placa, posicion, velocidad, aceleracion, velocidadCrucero, tazaAceleracion)
+      case "Bus" => Bus(placa, posicion, velocidad, aceleracion, velocidadCrucero, tazaAceleracion)
+      case "Moto" => Moto(placa, posicion, velocidad, aceleracion, velocidadCrucero, tazaAceleracion)
+      case "MotoTaxi" => MotoTaxi(placa, posicion, velocidad, aceleracion, velocidadCrucero, tazaAceleracion)
     }
   }
   

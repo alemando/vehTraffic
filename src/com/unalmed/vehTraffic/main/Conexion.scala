@@ -128,8 +128,9 @@ object Conexion {
   private def insertarVehiculos(session: Session, listaVehiculos: ArrayBuffer[Vehiculo]) = {
     listaVehiculos.foreach(vehiculo =>{
       val script = s"""CREATE(:Vehiculo{placa:'${vehiculo.placa}', x:${vehiculo.posicion.x}, y:${vehiculo.posicion.y},
-        magnitud:${vehiculo.velocidad.magnitud}, direccion:${vehiculo.velocidad.direccion.valor}, velocidadCrucero:${vehiculo.velocidadCrucero}, 
-        aceleracion:${vehiculo.aceleracion}, tipo:'${vehiculo.getClass.getSimpleName}'})"""
+        magnitud:${vehiculo.velocidad.magnitud}, direccion:${vehiculo.velocidad.direccion.valor}, aceleracion:${vehiculo.aceleracion},
+        velocidadCrucero:${vehiculo.velocidadCrucero}, tazaAceleracion:${vehiculo.tazaAceleracion},
+        tipo:'${vehiculo.getClass.getSimpleName}'})"""
       val result = session.run(script)
     })
   }
@@ -244,8 +245,8 @@ object Conexion {
       val nodo = values.get(0) //vehiculo
       val punto = Punto(nodo.get("x").asDouble(), nodo.get("y").asDouble())
       val velocidad = Velocidad(nodo.get("magnitud").asDouble(), Angulo(nodo.get("direccion").asDouble()))
-      vehiculos += Vehiculo(nodo.get("placa").asString(), punto, velocidad, nodo.get("velocidadCrucero").asDouble(), 
-          nodo.get("aceleracion").asDouble(), nodo.get("tipo").asString())
+      vehiculos += Vehiculo(nodo.get("placa").asString(), punto, velocidad, nodo.get("aceleracion").asDouble(), nodo.get("velocidadCrucero").asDouble(), 
+          nodo.get("tazaAceleracion").asDouble(), nodo.get("tipo").asString())
     }
     
     vehiculos

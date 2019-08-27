@@ -18,8 +18,8 @@ object Bus{
     new Bus(placa, posicion, velocidad, aceleracion,velocidadCrucero, tazaAceleracion)
   }
   
-  def apply(placa: String, posicion: Punto, velocidad: Velocidad, velocidadCrucero: Double, aceleracion: Double):Bus={
-    new Bus(placa, posicion, velocidad, velocidadCrucero, aceleracion)
+  def apply(placa: String, posicion: Punto, velocidad: Velocidad, aceleracion: Double ,velocidadCrucero: Double, tazaAceleracion: Double):Bus={
+    new Bus(placa, posicion, velocidad, aceleracion, velocidadCrucero, tazaAceleracion)
   }
   
   def placa: String ={

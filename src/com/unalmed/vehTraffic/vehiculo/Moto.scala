@@ -19,8 +19,8 @@ object Moto{
     new Moto(placa, posicion, velocidad, aceleracion,velocidadCrucero, tazaAceleracion)
   }
   
-  def apply(placa:String, posicion: Punto, velocidad: Velocidad, velocidadCrucero: Double, aceleracion: Double):Moto={
-    new Moto(placa, posicion, velocidad, velocidadCrucero, aceleracion)
+  def apply(placa:String, posicion: Punto, velocidad: Velocidad, aceleracion:Double ,velocidadCrucero: Double, tazaAceleracion: Double):Moto={
+    new Moto(placa, posicion, velocidad, aceleracion,velocidadCrucero, tazaAceleracion)
   }
   
   def placa: String ={

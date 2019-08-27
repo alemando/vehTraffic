@@ -18,8 +18,8 @@ object Camion{
     new Camion(placa, posicion, velocidad, aceleracion,velocidadCrucero, tazaAceleracion)
   }
   
-  def apply(placa: String, posicion: Punto, velocidad: Velocidad, velocidadCrucero: Double, aceleracion: Double):Camion={
-    new Camion(placa, posicion, velocidad, velocidadCrucero, aceleracion)
+  def apply(placa:String, posicion: Punto, velocidad: Velocidad, aceleracion:Double ,velocidadCrucero: Double, tazaAceleracion: Double):Camion={
+    new Camion(placa, posicion, velocidad, aceleracion,velocidadCrucero, tazaAceleracion)
   }
   
   def placa: String ={
