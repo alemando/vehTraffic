@@ -20,6 +20,10 @@ object Carro{
     new Carro(placa, posicion, velocidad, velocidadCrucero, aceleracion)
   }
   
+  def apply(placa: String, posicion: Punto, velocidad: Velocidad, velocidadCrucero: Double, aceleracion: Double):Carro={
+    new Carro(placa, posicion, velocidad, velocidadCrucero, aceleracion)
+  }
+  
   def placa: String ={
     val r= scala.util.Random
     val letras = Placa.letras

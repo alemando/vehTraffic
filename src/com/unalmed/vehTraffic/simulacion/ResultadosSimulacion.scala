@@ -58,7 +58,7 @@ class ResultadosSimulacion(simulacion:Simulacion) {
   //Tiempos
   val tiempoSimulacion = simulacion.t
   result.resultadosSimulacion.tiempos.simulacion=tiempoSimulacion
-  val tiempoRealidad = (simulacion.t/simulacion.dt)*(simulacion.tRefresh/1000.0)
+  val tiempoRealidad = (simulacion.t/Simulacion.dt)*(Simulacion.tRefresh/1000.0)
   result.resultadosSimulacion.tiempos.realidad=tiempoRealidad
   
   //Velocidad vehículos

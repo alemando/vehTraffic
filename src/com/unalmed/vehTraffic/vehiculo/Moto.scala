@@ -19,6 +19,10 @@ object Moto{
     new Moto(placa, posicion, velocidad, velocidadCrucero, aceleracion)
   }
   
+  def apply(placa:String, posicion: Punto, velocidad: Velocidad, velocidadCrucero: Double, aceleracion: Double):Moto={
+    new Moto(placa, posicion, velocidad, velocidadCrucero, aceleracion)
+  }
+  
   def placa: String ={
     val r= scala.util.Random
     val letras = Placa.letras

@@ -258,6 +258,11 @@ object Viaje{
     new Viaje(vehiculo, origen, destino, camino.get ,ruta, intersecciones)
   }
   
+  def apply(vehiculo: Vehiculo, origen: Interseccion, destino: Interseccion, ruta: Queue[Via], intersecciones: Queue[Interseccion]) = {
+     val camino = GrafoVia.camino(origen, destino)
+     new Viaje(vehiculo, origen, destino, camino.get ,ruta, intersecciones)
+  }
+  
     def llenarViajes(vehiculos: ArrayBuffer[Vehiculo], intersecciones: ArrayBuffer[Interseccion]): ArrayBuffer[Viaje]={
     val todos:ArrayBuffer[Viaje] = ArrayBuffer()
     vehiculos.foreach(vehiculo =>{

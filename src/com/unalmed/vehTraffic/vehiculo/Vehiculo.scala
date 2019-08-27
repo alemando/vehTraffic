@@ -43,6 +43,18 @@ object Vehiculo{
       return MotoTaxi(nodo, Velocidad(0, angulo), velocidad, aceleracion)
   }
   
+  def apply(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double, tipo:String): Vehiculo = {
+     
+    tipo match{
+      case "Carro" => Carro(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
+      case "Camion" => Camion(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
+      case "Bus" => Bus(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
+      case "Moto" => Moto(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
+      case "MotoTaxi" => MotoTaxi(placa : String, p : Punto, v: Velocidad, vc: Double, a: Double)
+    }
+  }
+  
+  
   def llenarVehiculos(minVehiculos:Int, maxVehiculos:Int, minVelocidad:Int, maxVelocidad:Int, minAceleracion: Int, maxAceleracion:Int, proporciones:ArrayBuffer[Double]): ArrayBuffer[Vehiculo]={
       val minimo = minVehiculos
       val maximo = maxVehiculos

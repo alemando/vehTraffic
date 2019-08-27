@@ -8,6 +8,7 @@ import com.unalmed.vehTraffic.mallaVial.Via
 import scala.collection.mutable.ArrayBuffer
 import com.unalmed.vehTraffic.frame.Grafico
 import com.unalmed.vehTraffic.mallaVial.CamaraFotoDeteccion
+import com.unalmed.vehTraffic.grafo.GrafoVia
 
 object Main extends App{
   
@@ -17,6 +18,8 @@ object Main extends App{
   
   Grafico.graficarVias(listaVias)
   
+  GrafoVia.construir(listaVias)
+  
   var objectSimulacion: Simulacion = _
   
   def start() = {
@@ -24,21 +27,30 @@ object Main extends App{
       Thread.sleep(100)
     }
     if (objectSimulacion != null) objectSimulacion.borrar
-    objectSimulacion = new Simulacion(listaVias, listaIntersecciones, listaCamaraFotoDeteccion)
+    objectSimulacion = Simulacion(listaVias, listaIntersecciones, listaCamaraFotoDeteccion)
     objectSimulacion.start()
     
   }
   
   def stop() = {
-    objectSimulacion.stop()
+    if(objectSimulacion != null) objectSimulacion.stop()
   }
   
   def guardar() = {
-    objectSimulacion.stop()
+    if(objectSimulacion != null){
+      objectSimulacion.stop()
+      Conexion.guardarSimulacion(objectSimulacion)
+    }
   }
   
   def reconstruir(){
-    objectSimulacion.stop()
+    if(objectSimulacion != null) objectSimulacion.stop()
+    if (objectSimulacion != null) objectSimulacion.borrar
+    if(Conexion.comprobarSimulacio()) objectSimulacion = Conexion.cargarSimulacion(listaVias, listaIntersecciones, listaCamaraFotoDeteccion)
+    while(Thread.activeCount()>3){
+      Thread.sleep(100)
+    }
+    objectSimulacion.start()
   }
   
 }
