@@ -11,23 +11,18 @@ class Viaje private (val vehiculo: Vehiculo, val origen: Interseccion, val desti
   
 	def recorrerEnVehiculo(dt : Double, dtSimulacion: Double, tSimulacion: Double, xSemaforoFrenar: Int, xSemaforoAmarilloContinuar:Int):Unit = {
     
+	  //Usado para definir el ángulo del auto cuando se cambia de vía
     def definirAngulo(interseccion: Interseccion, via: Via):Angulo= if (via.origen == interseccion) via.anguloOrigen else via.anguloDestino
-
+    
     if(!intersecciones.isEmpty){
       
       val interseccionSiguiente = intersecciones.head
       val viaActual = ruta.head
-//      println("\n")
-//      println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
-//      if (vehiculo.posicion.x.isNaN()){
-//      println(camino)
-//      println(interseccionSiguiente)
-//      println(viaActual)
-//      println(s"dt: $dt")
       val distanciaCarroAInterseccion = vehiculo.posicion.longitudEntrePunto(interseccionSiguiente)
       val crucero = if(Velocidad.kilometroAmetro(vehiculo.velocidad.magnitud) >= vehiculo.velocidadCrucero) true else false
+      
+      //Inicia el recorrido
       if(interseccionSiguiente==origen){
-//        println("Origen")
           val interseccionActual = intersecciones.dequeue()
           vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, viaActual))
           recorrerEnVehiculo(dt, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
@@ -35,44 +30,23 @@ class Viaje private (val vehiculo: Vehiculo, val origen: Interseccion, val desti
       else{
       val semaforo = interseccionSiguiente.nodoSemaforo.semaforoEnVia(viaActual)
       val (estadoSemaforo, tiempoProximoCambioSemaforo) = interseccionSiguiente.nodoSemaforo.estadoDeSemaforo(dt, semaforo, dtSimulacion, tSimulacion)
-//      println("\n")
-//      println(s"Movimiento hacia $interseccionSiguiente por $viaActual\n")
-//      println(s"dt: $dt")
-//      interseccionSiguiente.nodoSemaforo.semaforos.foreach(sem=>{
-//        if(sem==semaforo)println(s"Este semáforo: ${interseccionSiguiente.nodoSemaforo.estadoDeSemaforo(dt, sem, simulacion)}")
-//        else println(s"Otro semáforo: ${interseccionSiguiente.nodoSemaforo.estadoDeSemaforo(dt, sem, simulacion)}")})
-//      
-        if(dt<=0){
-          println("ERROR")
-          println("ERROR")
-          println("ERROR")
-          println("ERROR")
-          println("ERROR")
-        }
-        //Si estoy adentro de la zona de frenado
-        else if(vehiculo.posicion == interseccionSiguiente.asInstanceOf[Punto]){
-          //Iniciar el recorrido
-          if(interseccionSiguiente==origen){
-            val interseccionActual = intersecciones.dequeue()
-            vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, viaActual))
-            recorrerEnVehiculo(dt, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
-          }
+      //Si estoy en la intersección final
+        if(vehiculo.posicion == interseccionSiguiente.asInstanceOf[Punto]){
         //Termina recorrido
-          else if(interseccionSiguiente==destino){
-//          println("Fin")
+          if(interseccionSiguiente==destino){
             val interseccionActual = intersecciones.dequeue()
             val viaActual = ruta.dequeue()
           }
         //Cambia de calle
           else if(estadoSemaforo=="Verde" || estadoSemaforo=="Amarillo" || (estadoSemaforo=="Rojo" && tiempoProximoCambioSemaforo==0.0)){
-//          println("Cambiar calle")
           val interseccionActual = intersecciones.dequeue()
           val viaPasada = ruta.dequeue()
           vehiculo.velocidad= Velocidad(vehiculo.velocidad.magnitud)(definirAngulo(interseccionActual, ruta.head))
           recorrerEnVehiculo(dt, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
+          //Esperar en rojo
           else{
-//          println("Esperando rojo")
+            vehiculo.aceleracion=0.0
             if(dt>tiempoProximoCambioSemaforo){
             recorrerEnVehiculo(dt-tiempoProximoCambioSemaforo, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
           }
@@ -81,160 +55,34 @@ class Viaje private (val vehiculo: Vehiculo, val origen: Interseccion, val desti
       //Si estoy en la zona roja
       else if(distanciaCarroAInterseccion<= xSemaforoFrenar){
         if(estadoSemaforo=="Rojo"){
-//          println("Zona roja, rojo")
           val(desaceleracion,tiempoFrenado)= vehiculo.parametrosFrenadoEnDistancia(distanciaCarroAInterseccion)
-          val tiempoComparacion = if (tiempoFrenado<tiempoProximoCambioSemaforo)tiempoFrenado else tiempoProximoCambioSemaforo
-          //Frenando sin llegar a la interseccion
-          if (dt<tiempoComparacion){
-//            println("Voy frenando")
-//            println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
-            vehiculo.aplicarAceleracion(dt, desaceleracion)
-//            println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
-          }
-          //Freno en la intersección e implemento tiempo sobrante
-          else{
-//            println("Freno del todo y queda tiempo")
-//            println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
-            vehiculo.aplicarAceleracion(tiempoProximoCambioSemaforo,desaceleracion)
-//            println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
-            if(tiempoFrenado==tiempoComparacion) vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-            if(dt>tiempoComparacion)recorrerEnVehiculo(dt-tiempoComparacion,dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
-          }
+          val tiempoRestante=vehiculo.frenar(dt,tiempoFrenado, tiempoProximoCambioSemaforo, desaceleracion)
+          if (tiempoFrenado==dt-tiempoRestante) vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
+          if (tiempoRestante>0) recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
         }
         //Si estoy en la zona roja pero estoy en verde o en amarillo y en la zona amarillo
         else if(estadoSemaforo=="Verde" || (estadoSemaforo=="Amarillo" && distanciaCarroAInterseccion <= xSemaforoAmarilloContinuar)){
-//          println("Zona roja pero semáforo no rojo")
-          //Calculo la máxima distancia
-        val (distanciaAceleracion, distanciaCrucero,tiempoAceleracion, tiempoCrucero): (Double,Double,Double,Double) = {
-          if (crucero)(0.0,vehiculo.maximaDistanciaUniforme(dt),0.0,dt)
-          else{
-            val tiempoAcelerando = vehiculo.tiempoParaVelocidad(vehiculo.velocidadCrucero)
-            if(dt>= tiempoAcelerando){
-              val tiempoCrucero = dt-tiempoAcelerando
-              (vehiculo.maximaDistanciaAcelerado(tiempoAcelerando),vehiculo.maximaDistanciaUniforme(tiempoCrucero),tiempoAcelerando,tiempoCrucero)
-            }
-            else (vehiculo.maximaDistanciaAcelerado(dt),0.0,dt,0.0)
-          }
-        }
-        val maximaDistancia = distanciaAceleracion + distanciaCrucero
-        //Si la distancia máxima no sobrepasa a la intersección
-        if (maximaDistancia<distanciaCarroAInterseccion){
-//          println("Máxima distancia<AIntersección")
-          //Aplico aceleración solo si hay tiempo de aceleracion
-          if(tiempoAceleracion!=0)vehiculo.aplicarAceleracion(tiempoAceleracion)
-          //Aplico crucero el resto del tiempo
-          vehiculo.aplicarMovimientoRectilineoUniforme(tiempoCrucero)
-        }
-        //Si la máxima distancia sobrepasa a la zona de intersección
-          else /*if(maximaDistancia>=distanciaCarroAInterseccion-simulacion.xSemaforoFrenar)*/{
-//            println("Sobrepaso la intersección")
-            val distanciaInterseccion:Double ={ if(distanciaCarroAInterseccion<0.05)0.05 else distanciaCarroAInterseccion}
-            //Encuentro el tiempo sobrante luego de aplicar 
-            val tiempoRestante:Double ={
-              //Aplico aceleración hasta llegar a la intersección
-              if(distanciaInterseccion<distanciaAceleracion){
-//                println("Distancia Interseccion<Distancia Aceleración")
-                val tiempoAceleracionRecortado = vehiculo.tiempoParaVelocidad(vehiculo.velocidadEnDistancia(distanciaInterseccion))
-                vehiculo.aplicarAceleracion(tiempoAceleracionRecortado)
-                dt-tiempoAceleracionRecortado
-              }
-              else{
-//                println("Llego a crucero y aplico")
-                //Aplico aceleración hasta llegar a crucero y luego aplico crucero hasta la intersección
-                vehiculo.aplicarAceleracion(tiempoAceleracion)
-                val tiempoCruceroRecortado = (distanciaInterseccion-distanciaAceleracion)/vehiculo.velocidadCrucero
-                vehiculo.aplicarMovimientoRectilineoUniforme(tiempoCruceroRecortado)
-                dt-tiempoAceleracion-tiempoCruceroRecortado
-              }
-            }
-            //El tiempo restante lo aplico en la intersección
-            vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-            if (tiempoRestante>0) recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
-          }
+          val tiempoRestante=vehiculo.moverse(dt,crucero, distanciaCarroAInterseccion)
+          //El tiempo restante lo aplico en la intersección
+          vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
+          if (tiempoRestante>0) recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
         }
         //Amarillo y frenar
         else{
-//          println("Amarillo y freno")
           val distanciaAZonaAmarillo = if(distanciaCarroAInterseccion-xSemaforoAmarilloContinuar<0.05)0.05 else distanciaCarroAInterseccion-xSemaforoAmarilloContinuar
           val(desaceleracion,tiempoFrenado)= vehiculo.parametrosFrenadoEnDistancia(distanciaCarroAInterseccion)
           val tiempoAZonaAmarillo = vehiculo.tiempoParaVelocidad(vehiculo.velocidadEnDistancia(distanciaAZonaAmarillo, desaceleracion), desaceleracion)
-          val tiempoComparacion = if (tiempoAZonaAmarillo<tiempoProximoCambioSemaforo)tiempoAZonaAmarillo else tiempoProximoCambioSemaforo
-          //Frenando sin llegar a la zona amarilla
-          if (dt<tiempoComparacion){
-//            println("No llego a amarillo")
-            vehiculo.aplicarAceleracion(dt, desaceleracion)
-          }
-          //Freno hasta zona amarilla e implemento tiempo sobrante
-          else{
-//            println("Si llego a amarillo")
-            vehiculo.aplicarAceleracion(tiempoAZonaAmarillo,desaceleracion)
-//            if(tiempoFrenado==tiempoComparacion) vehiculo.posicion = Punto(interseccionSiguiente.x, interseccionSiguiente.y)
-            if (dt>tiempoComparacion) recorrerEnVehiculo(dt-tiempoComparacion,dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
-          }
+          val tiempoRestante=vehiculo.frenar(dt,tiempoAZonaAmarillo, tiempoProximoCambioSemaforo, desaceleracion)
+          if (tiempoRestante>0) recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
         }
       }
       //Si estoy afuera de la zona de frenado
-      else /*if(distanciaCarroAInterseccion> simulacion.xSemaforoFrenar)*/{
-        //Calculo la máxima distancia
-//        println("Fuera de la zona de frenado")
-        val (distanciaAceleracion, distanciaCrucero,tiempoAceleracion, tiempoCrucero): (Double,Double,Double,Double) = {
-          if (crucero)(0.0,vehiculo.maximaDistanciaUniforme(dt),0.0,dt)
-          else{
-            val tiempoAcelerando = vehiculo.tiempoParaVelocidad(vehiculo.velocidadCrucero)
-            if(dt>= tiempoAcelerando){
-              val tiempoCrucero = dt-tiempoAcelerando
-              (vehiculo.maximaDistanciaAcelerado(tiempoAcelerando),vehiculo.maximaDistanciaUniforme(tiempoCrucero),tiempoAcelerando,tiempoCrucero)
-            }
-            else (vehiculo.maximaDistanciaAcelerado(dt),0.0,dt,0.0)
-          }
-        }
-        val maximaDistancia = distanciaAceleracion + distanciaCrucero
-        //Si la distancia máxima no sobrepasa a la zona de frenado
-        if (maximaDistancia<distanciaCarroAInterseccion-xSemaforoFrenar){
-//          println("No llego a zona roja")
-          //Aplico aceleración solo si hay tiempo de aceleracion
-          if(tiempoAceleracion!=0)vehiculo.aplicarAceleracion(tiempoAceleracion)
-          //Aplico crucero el resto del tiempo
-          vehiculo.aplicarMovimientoRectilineoUniforme(tiempoCrucero)
-        }
-        //Si la máxima distancia sobrepasa a la zona de frenado
-        else /*if(maximaDistancia>=distanciaCarroAInterseccion-simulacion.xSemaforoFrenar)*/{
-//          println("Llego a zona roja")
-          val distanciaRojo:Double ={ if(distanciaCarroAInterseccion-xSemaforoFrenar<0.05)0.05 else distanciaCarroAInterseccion-xSemaforoFrenar}
-          //Encuentro el tiempo sobrante luego de aplicar 
-          val tiempoRestante:Double ={
-            //Aplico aceleración hasta llegar al límite de zona de frenado
-            if(distanciaRojo<distanciaAceleracion){
-//              println("Acelero hasta zona de frenado")
-              val tiempoAceleracionRecortado = vehiculo.tiempoParaVelocidad(vehiculo.velocidadEnDistancia(distanciaRojo))
-              vehiculo.aplicarAceleracion(tiempoAceleracionRecortado)
-              dt-tiempoAceleracionRecortado
-            }
-            else{
-//              println("Crucero hasta zona de frenado")
-//              println(s"Tiempo aceleración: $tiempoAceleracion")
-//              println(s"Distancia a intersección: $distanciaCarroAInterseccion")
-              //Aplico aceleración hasta llegar a crucero y luego aplico crucero hasta el límite de zona roja
-              if (tiempoAceleracion>0) vehiculo.aplicarAceleracion(tiempoAceleracion)
-              val tiempoCruceroRecortado = (distanciaRojo-distanciaAceleracion)/vehiculo.velocidadCrucero
-//              println(s"Tiempo crucero recortado: $tiempoCruceroRecortado")
-              if (tiempoCruceroRecortado>0)vehiculo.aplicarMovimientoRectilineoUniforme(tiempoCruceroRecortado)
-//              println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
-//              println(s"Posición intersección, x: ${interseccionSiguiente.x}, y: ${interseccionSiguiente.y}")
-              dt-tiempoAceleracion-tiempoCruceroRecortado
-              }
-            }
-          //El tiempo restante lo aplico en la zona de frenado
-//          println(s"Tiempo restante: $tiempoRestante")
-          if(tiempoRestante>0)recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
-            }
+      else{
+        val tiempoRestante=vehiculo.moverse(dt,crucero, (distanciaCarroAInterseccion- xSemaforoFrenar))
+        //El tiempo restante lo aplico en la intersección
+        if (tiempoRestante>0) recorrerEnVehiculo(tiempoRestante, dtSimulacion, tSimulacion, xSemaforoFrenar, xSemaforoAmarilloContinuar)
         }
       }
-//      if(vehiculo.posicion.x.isNaN){
-//      println(s"Posición vehiculo, x: ${vehiculo.posicion.x}, y: ${vehiculo.posicion.y}")
-//      println(interseccionSiguiente)
-//      println(viaActual)
-//      println(s"dt: $dt")
     }
   }
 }
