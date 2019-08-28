@@ -10,7 +10,7 @@ import com.unalmed.vehTraffic.dimension.Velocidad
 trait MovimientoUniforme extends Movil{
     
   def aplicarMovimientoRectilineoUniforme (t: Double):Unit = {
-    val theta = velocidad.direccion.valor.toRadians
+    val theta = angulo.toRadians
     val v = Velocidad.kilometroAmetro(velocidad.magnitud)
     val dy = v*t*Math.sin(theta)
     val dx = v*t*Math.cos(theta)
@@ -18,7 +18,7 @@ trait MovimientoUniforme extends Movil{
   }
   
   def maximaDistanciaUniforme(t:Double):Double={
-    val v = velocidadCrucero
+    val v = Velocidad.kilometroAmetro(velocidadCrucero)
     val dx = v*t
     dx
   }

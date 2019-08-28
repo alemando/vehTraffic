@@ -62,12 +62,7 @@ class NodoSemaforo(val interseccion: Interseccion, val semaforos: ArrayBuffer[Se
 object NodoSemaforo{
   
   def crearNodos(semaforos: ArrayBuffer[Semaforo], intersecciones: ArrayBuffer[Interseccion]):Unit={
-    val arr = new ArrayBuffer[NodoSemaforo]()
-    intersecciones.foreach(interseccion=>{
-      val nodoSemaforo = new NodoSemaforo(interseccion, semaforos.filter(_.interseccion == interseccion))
-      arr += nodoSemaforo
-      interseccion.nodoSemaforo =  Option(nodoSemaforo)
-    })
+    semaforos.groupBy(_.interseccion).foreach(grupo=>{grupo._1.nodoSemaforo=Option(new NodoSemaforo(grupo._1, grupo._2))})
   }
   
 }

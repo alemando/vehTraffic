@@ -16,7 +16,7 @@ case class Via private(val or : Interseccion, val fn : Interseccion)( val veloci
   override def toString = {s"${tipo.nombre}: $nombre"}
   
   //Revisar getOrELse
-   def fotomulta = _fotomulta.get
+   def fotomulta = _fotomulta
   
    def fotomulta_= (fotomulta: Option[CamaraFotoDeteccion]) = _fotomulta = fotomulta
 }

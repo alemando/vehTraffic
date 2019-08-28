@@ -17,10 +17,10 @@ extends Movil(_p,_v,_a,_vc,_ta) with MovimientoAcelerado {
   
   //Implementa el movimiento acelerado y de crucero según el movimiento que se esté aplicando actualmente y de acuerdo al límite en dónde se puede
   //mover de esa forma
-  def moverse(dt: Double,crucero: Boolean, distanciaALimite:Double):Double={
+  def moverse(dt: Double,crucero: Boolean, distanciaALimite:Double):(Double,Boolean)={
     //Busco los parámetros de máxima distancia con la función
     val (maximaDistancia, distanciaAceleracion, distanciaCrucero,tiempoAceleracion, tiempoCrucero) = parametrosMaximaDistancia(dt,crucero, velocidadCrucero)
-    val tiempoRestante:Double={
+    val tiempoRestante:(Double,Boolean)={
       if(maximaDistancia<distanciaALimite){
       if(tiempoAceleracion>0){
         aceleracion= tazaAceleracion
@@ -28,7 +28,7 @@ extends Movil(_p,_v,_a,_vc,_ta) with MovimientoAcelerado {
       if(tiempoCrucero>0){
         aceleracion=0.0
         aplicarAceleracion(tiempoCrucero)}
-      0.0
+      (0.0,false)
     }
     else{
       val distanciaLimite:Double ={ if(distanciaALimite<0.05)0.05 else distanciaALimite}
@@ -46,12 +46,12 @@ extends Movil(_p,_v,_a,_vc,_ta) with MovimientoAcelerado {
           aceleracion=tazaAceleracion
           aplicarAceleracion(tiempoAceleracion)
           aceleracion=0.0
-          val tiempoCruceroRecortado = (distanciaLimite-distanciaAceleracion)/velocidadCrucero
+          val tiempoCruceroRecortado = (distanciaLimite-distanciaAceleracion)/Velocidad.kilometroAmetro(velocidadCrucero)
           aplicarAceleracion(tiempoCruceroRecortado)
           dt-tiempoAceleracion-tiempoCruceroRecortado
         }
       }
-      tiempoRestanteInterno
+      (tiempoRestanteInterno,true)
     }
     }
     tiempoRestante
@@ -71,6 +71,10 @@ extends Movil(_p,_v,_a,_vc,_ta) with MovimientoAcelerado {
       }
     }
   parametros
+  }
+  
+  def maximaDistancia(tiempo: Double, crucero: Boolean, velocidadCrucero:Double):Double={
+    parametrosMaximaDistancia (tiempo, crucero, velocidadCrucero)._1
   }
   
   def frenar(dt:Double, tiempoALimite:Double, tiempoSemaforo: Double, desaceleracion: Double):Double={

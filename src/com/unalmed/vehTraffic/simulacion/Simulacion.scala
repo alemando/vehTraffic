@@ -41,10 +41,9 @@ class Simulacion private(val listaVias: ArrayBuffer[Via],val listaIntersecciones
     running = true
     while (running) {
       Grafico.graficarVehiculos(listaViajes)
-      listaViajes.foreach(_.recorrerEnVehiculo(Simulacion.dt,Simulacion.dt,t,Simulacion.xSemaforoFrenar, Simulacion.xSemaforoAmarilloContinuar))
+      listaViajes.foreach(_.recorrerEnVehiculo(Simulacion.dt,Simulacion.dt,t,Simulacion.xSemaforoFrenar, Simulacion.xSemaforoAmarilloContinuar, listaComparendos))
       t = t + Simulacion.dt
       Thread.sleep(Simulacion.tRefresh)
-//      if (listaVehiculos.filter(x => x.viaje.destino == x.posicion).length == listaVehiculos.length){
       if (listaViajes.filter(x => x.destino == x.vehiculo.posicion).length == listaVehiculos.length){
         running = false
         new ResultadosSimulacion(this)//.imprimir()

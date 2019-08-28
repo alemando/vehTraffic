@@ -17,7 +17,7 @@ trait MovimientoAcelerado extends MovimientoUniforme{
   def cambiarVelocidad(t:Double, a:Double):Unit = {
     val v0 = Velocidad.kilometroAmetro(velocidad.magnitud)
     val dv = Velocidad.metroAkilometro(v0 + a*t)
-    velocidad = Velocidad(if (dv>=0) dv else 0)(velocidad.direccion)
+    velocidad = Velocidad(if (dv>=0) dv else 0,velocidad.direccion, velocidadCrucero)
   }
   
   def tiempoParaVelocidad(vel:Double, a:Double=tazaAceleracion):Double={
